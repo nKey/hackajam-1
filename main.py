@@ -44,6 +44,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/debug')
+def debug():
+    return app.send_static_file('index-debug.html')
+
+
 @socketio.on('connect', namespace='/main')
 def main_connect():
     player_id = uuid.uuid4().hex
