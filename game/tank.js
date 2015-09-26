@@ -113,8 +113,11 @@ Tank.prototype.update = function (crankAngle) {
 
     this.turret.x = this.tank.x;
     this.turret.y = this.tank.y;
+    
+    if (crankAngle == undefined) {
+        crankAngle = 0;
+    }
 
-    // console.log(turretAngle);
     this.turret.rotation = this.tank.rotation + crankAngle;//this.game.physics.arcade.angleToPointer(this.turret);
     // this.turret.rotation = this.tank.rotation;
 }
