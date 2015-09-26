@@ -1,17 +1,34 @@
-// var game;
-// var leverArea;
-// var leverTrigger;
+var game;
+var leverArea;
+var leverTrigger;
+var x;
+var y;
+var width;
+var height;
 
-function Lever(game) {
+function Lever(game, x, y, width, height) {
     this.game = game;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
 }
 
 Lever.prototype.preload = function(){
+
+    game.load.atlasJSONHash('bot', 'lever.png', 'lever.json');
+
 }
 
 Lever.prototype.create = function() {
-    this.leverArea = new Phaser.Rectangle(this.game.world.centerX, this.game.world.centerY, 50, 250);
-    this.leverTrigger = new Phaser.Rectangle(this.game.world.centerX, this.game.world.centerY, 50, 25);
+    this.leverArea = new Phaser.Rectangle(this.x, this.y, this.width, this.height);
+    this.leverTrigger = new Phaser.Rectangle(this.x, this.y, this.width, this.height/10);
+    s = game.add.sprite(this.x, this.y, 'bot');
+    s.anchor.setTo(0.5, 0.5);
+    s.scale.setTo(2, 2);
+
+    s.animations.add('run');
+    s.animations.play('run', 10, true);
 }
 
 Lever.prototype.update = function() {
