@@ -7,7 +7,6 @@ var bullets;
 var explosions;
 var currentSpeed = 0;
 
-var fireReloadDelay = 300;
 var nextFire = 0;
 //map
 var blockedLayer;
@@ -16,7 +15,7 @@ function Tank(game) {
     this.game = game;
 
     this.currentSpeed = 0;
-    this.fireReloadDelay = 300;
+    this.fireReloadDelay = 2600;
     this.nextFire = 0;
 }
 
@@ -25,6 +24,7 @@ Tank.prototype.preload = function() {
     // this.game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tank.json');
     this.game.load.image('bullet', 'assets/bullet.png');
     game.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
+    game.load.audio('tankFireSound', ['assets/sound/tank_fire.ogg']);
 }
 
 Tank.prototype.create = function(blockedLayer){
@@ -84,7 +84,6 @@ Tank.prototype.setupTank = function() {
 }
 
 Tank.prototype.update = function (crankAngle) {
-    //collision
     this.game.physics.arcade.collide(this.tank, this.blockedLayer);
 
     if (this.cursors.left.isDown) {
@@ -118,8 +117,7 @@ Tank.prototype.update = function (crankAngle) {
         crankAngle = 0;
     }
 
-    this.turret.rotation = this.tank.rotation + crankAngle;//this.game.physics.arcade.angleToPointer(this.turret);
-    // this.turret.rotation = this.tank.rotation;
+    this.turret.rotation = this.tank.rotation + crankAngle;
 }
 
 Tank.prototype.fire = function () {
@@ -131,5 +129,8 @@ Tank.prototype.fire = function () {
         bullet.reset(this.turret.x, this.turret.y);
         bullet.rotation = this.turret.rotation;
         bullet.body.velocity = this.game.physics.arcade.velocityFromAngle(bullet.angle, 300);
+
+        sound = game.add.audio('tankFireSound');
+        sound.play();
     }
 }
