@@ -5,6 +5,7 @@ var x;
 var y;
 var width;
 var height;
+var leverSprite;
 
 function Lever(game, x, y, width, height) {
     this.game = game;
@@ -14,21 +15,19 @@ function Lever(game, x, y, width, height) {
     this.height = height;
 }
 
-Lever.prototype.preload = function(){
-
+Lever.prototype.preload = function() {
     game.load.atlasJSONHash('bot', 'lever.png', 'lever.json');
-
 }
 
 Lever.prototype.create = function() {
     this.leverArea = new Phaser.Rectangle(this.x, this.y, this.width, this.height);
-    this.leverTrigger = new Phaser.Rectangle(this.x, this.y, this.width, this.height/10);
-    s = game.add.sprite(this.x, this.y, 'bot');
-    s.anchor.setTo(0.5, 0.5);
-    s.scale.setTo(2, 2);
+    this.leverTrigger = new Phaser.Rectangle(this.x, this.y, this.width, this.height/1.5);
+    leverSprite = game.add.sprite(0, 0, 'bot');
+    leverSprite.x = this.x + leverSprite.width / 2;
+    leverSprite.y = this.y + leverSprite.height / 2;
+    leverSprite.anchor.setTo(0.5, 0.5);
 
-    s.animations.add('run');
-    s.animations.play('run', 10, true);
+    leverSprite.animations.add('run');
 }
 
 Lever.prototype.update = function() {
@@ -37,6 +36,9 @@ Lever.prototype.update = function() {
             this.game.input.y - this.leverTrigger.height/2 > this.leverArea.y &&
             this.game.input.y + this.leverTrigger.height - this.leverTrigger.height/2 < this.leverArea.y + this.leverArea.height) {
             this.leverTrigger.y = this.game.input.y - this.leverTrigger.height/2;
+
+            normalizedLeverValue = (this.leverTrigger.y - this.leverArea.y) / (this.leverArea.height - this.leverTrigger.height);
+            leverSprite.animations.frame = Math.ceil(normalizedLeverValue * leverSprite.animations.frameTotal) - 1;
         }
     }
 }

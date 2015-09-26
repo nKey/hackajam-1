@@ -7,7 +7,7 @@ var DEBUG = true;
 function preload() {
     game.stage.backgroundColor = '#DDDDDD';
     // crank = new Crank(game, game.world.centerX, game.world.centerY, 400);
-    lever = new Lever(game, 20, 20, 50, 200)
+    lever = new Lever(game, 0, 0, 107, 294);
     // crank.preload();
     lever.preload();
 }

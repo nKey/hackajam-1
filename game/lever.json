@@ -2,7 +2,7 @@
 
 {
 	"filename": "manche.png",
-	"frame": {"x":2,"y":1306,"w":67,"h":288},
+	"frame": {"x":2,"y":2,"w":67,"h":288},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":20,"y":6,"w":67,"h":288},
@@ -10,58 +10,74 @@
 },
 {
 	"filename": "manche_1.png",
-	"frame": {"x":2,"y":1042,"w":70,"h":262},
+	"frame": {"x":2,"y":292,"w":70,"h":272},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":18,"y":32,"w":70,"h":262},
+	"spriteSourceSize": {"x":18,"y":22,"w":70,"h":272},
 	"sourceSize": {"w":107,"h":294}
 },
 {
 	"filename": "manche_2.png",
-	"frame": {"x":2,"y":803,"w":72,"h":237},
+	"frame": {"x":71,"y":2,"w":72,"h":254},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":40,"w":72,"h":254},
+	"sourceSize": {"w":107,"h":294}
+},
+{
+	"filename": "manche_3.png",
+	"frame": {"x":74,"y":258,"w":72,"h":237},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":17,"y":57,"w":72,"h":237},
 	"sourceSize": {"w":107,"h":294}
 },
 {
-	"filename": "manche_3.png",
-	"frame": {"x":2,"y":591,"w":76,"h":210},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":15,"y":84,"w":76,"h":210},
-	"sourceSize": {"w":107,"h":294}
-},
-{
 	"filename": "manche_4.png",
-	"frame": {"x":2,"y":405,"w":79,"h":184},
+	"frame": {"x":145,"y":2,"w":75,"h":220},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":14,"y":110,"w":79,"h":184},
+	"spriteSourceSize": {"x":16,"y":74,"w":75,"h":220},
 	"sourceSize": {"w":107,"h":294}
 },
 {
 	"filename": "manche_5.png",
-	"frame": {"x":2,"y":245,"w":82,"h":158},
+	"frame": {"x":86,"y":497,"w":78,"h":203},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":12,"y":136,"w":82,"h":158},
+	"spriteSourceSize": {"x":14,"y":91,"w":78,"h":203},
 	"sourceSize": {"w":107,"h":294}
 },
 {
 	"filename": "manche_6.png",
-	"frame": {"x":2,"y":110,"w":84,"h":133},
+	"frame": {"x":148,"y":224,"w":78,"h":186},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":11,"y":161,"w":84,"h":133},
+	"spriteSourceSize": {"x":14,"y":108,"w":78,"h":186},
 	"sourceSize": {"w":107,"h":294}
 },
 {
 	"filename": "manche_7.png",
-	"frame": {"x":2,"y":2,"w":88,"h":106},
+	"frame": {"x":2,"y":566,"w":82,"h":169},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":9,"y":188,"w":88,"h":106},
+	"spriteSourceSize": {"x":12,"y":125,"w":82,"h":169},
+	"sourceSize": {"w":107,"h":294}
+},
+{
+	"filename": "manche_8.png",
+	"frame": {"x":166,"y":412,"w":84,"h":152},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":142,"w":84,"h":152},
+	"sourceSize": {"w":107,"h":294}
+},
+{
+	"filename": "manche_9.png",
+	"frame": {"x":166,"y":566,"w":88,"h":136},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":158,"w":88,"h":136},
 	"sourceSize": {"w":107,"h":294}
 }],
 "meta": {
@@ -69,8 +85,8 @@
 	"version": "1.0",
 	"image": "tank.png",
 	"format": "RGBA8888",
-	"size": {"w":92,"h":1596},
+	"size": {"w":256,"h":737},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:7b22115f9a186a162eb2c9b686a300dc:67bf32fc52567ce5a57b0c7555581f73:e5746570371ae3e0565b6e20f5a72ab3$"
+	"smartupdate": "$TexturePacker:SmartUpdate:c9951e32d9e4d862b92f74490cfe674d:aa77b6e70cd0746b976299499af48ab2:e5746570371ae3e0565b6e20f5a72ab3$"
 }
 }
