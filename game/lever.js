@@ -16,7 +16,7 @@ function Lever(game, x, y, width, height) {
 }
 
 Lever.prototype.preload = function() {
-    game.load.atlasJSONHash('bot', 'lever.png', 'lever.json');
+    game.load.atlasJSONHash('bot', 'assets/lever.png', 'assets/lever.json');
 }
 
 Lever.prototype.create = function() {
