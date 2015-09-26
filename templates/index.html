@@ -36,6 +36,19 @@
                 alert(error.message);
             });
         });
+        // game data
+        var STATES = {
+            'WAITING': 0,
+            'RUNNING': 1,
+            0: 'WAITING',
+            1: 'RUNNING',
+        };
+        var gameState = {
+            'clock': 0,
+            'state': 0,
+            'movement': 0,
+            'rotation': 0,
+        };
         var onGameJoin = function(state) {
             // init room state
             $('#room-players').empty();
@@ -62,6 +75,42 @@
                 socket.emit('ready');
                 return false;
             });
+            socket.on('event-game-start', function(data) {
+                gameState.clock = data.clock;
+                gameState.state = STATES['WAITING'];
+                socket.emit('event-game-start-ack');
+            });
+            socket.on('event-clock-sync', function(data) {
+                gameState.clock = data.clock;
+                if (gameState.clock < data.wait) {
+                    gameState.state = STATES['WAITING'];
+                } else {
+                    gameState.state = STATES['RUNNING'];
+                }
+                console.log('Game state ' + STATES[gameState.state]);
+            });
+            // control events
+            $('form#pull-left').submit(function(event) {
+                var value = parseInt($('#control_lever_left').val());
+                if (value != 0) {
+                    socket.emit('control-left', value);
+                }
+                return false;
+            });
+            $('form#pull-right').submit(function(event) {
+                var value = parseInt($('#control_lever_right').val());
+                if (value != 0) {
+                    socket.emit('control-right', value);
+                }
+                return false;
+            });
+            // movement events
+            socket.on('event-movement', function(data) {
+                gameState.movement = data.x;
+                gameState.rotation = data.r;
+                gameState.clock = data.clock;
+                console.log('Game state', gameState)
+            });
         };
     </script>
 </head>
@@ -87,6 +136,15 @@
         <input type="submit" value="Ready">
     </form>
 
+    <h2>Controls</h2>
+    <form id="pull-left" method="POST" action='#'>
+        <input type="text" name="control_lever_left" id="control_lever_left" placeholder="Value">
+        <input type="submit" value="Left Lever">
+    </form>
+    <form id="pull-right" method="POST" action='#'>
+        <input type="text" name="control_lever_right" id="control_lever_right" placeholder="Value">
+        <input type="submit" value="Right Lever">
+    </form>
 
     <h2>Receive:</h2>
     <div id="log"></div>

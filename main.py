@@ -13,7 +13,9 @@ socketio = SocketIO(app)
 
 
 '''
-Namespace flow: -> main -> state
+Namespace flow: -> main -> game
+
+
 
 '''
 
@@ -25,6 +27,8 @@ STATE = {
     'game_id': uuid.uuid4().hex,
     'players': {},
     'map_id': 0,
+    'event_clock': 0,
+    'movement_components': [0, 0],
 }
 
 GLOBAL = {
@@ -77,7 +81,7 @@ def main_settings(data):
 
 @socketio.on('disconnect', namespace='/main')
 def main_disconnect():
-    clear_state(session['player_id'])
+    state_clear_player(session['player_id'])
 
 
 # room screen
@@ -99,10 +103,19 @@ def state_ready():
     STATE['players'][player_id]['ready'] = True
     emit('ready', {'player_id': player_id}, room=game_id, broadcast=True)
     if all(player['ready'] for player_id, player in STATE['players'].iteritems()):
+        # start new game
         print('All players ready to start game')
-        # setup new game
-        # init event timers
-        pass
+        state_init()
+        emit('event-game-start', {'clock': 0, 'ack': game_id},
+            room=game_id, broadcast=True)
+
+
+@socketio.on('event-game-start-ack', namespace='/game')
+def event_game_start_ack():
+    game_id = STATE['game_id']
+    STATE['event_clock'] += 1
+    emit('event-clock-sync', {'clock': STATE['event_clock'], 'wait': 2},
+        room=game_id, broadcast=True)
 
 
 @socketio.on('disconnect', namespace='/game')
@@ -111,11 +124,32 @@ def state_disconnect():
     player_id = session['player_id']
     print('Client [%s] disconnected from game [%s]' % (player_id, game_id))
     emit('leave', {'player_id': player_id}, room=game_id, broadcast=True)
-    clear_state(player_id)
+    state_clear_player(player_id)
     #emit('state', STATE, room=game_id, broadcast=True)
 
 
-# game state
+# game events
+
+@socketio.on('control-left', namespace='/game')
+def event_control_left(value):
+    STATE['movement_components'][0] = value
+    event_notify_movement()
+
+
+@socketio.on('control-right', namespace='/game')
+def event_control_right(value):
+    STATE['movement_components'][1] = value
+    event_notify_movement()
+
+
+def event_notify_movement():
+    game_id = STATE['game_id']
+    left, right = STATE['movement_components']
+    x = (left / 2.0) + (right / 2.0)
+    r = (right / 2.0) - (left / 2.0)
+    STATE['event_clock'] += 1
+    emit('event-movement', {'x': x, 'r': r, 'clock': STATE['event_clock']},
+        room=game_id, broadcast=True)
 
 
 # helper functions
@@ -125,11 +159,17 @@ def update_global():
     emit('global', GLOBAL, namespace='/main', broadcast=True)
 
 
-def clear_state(player_id):
+# state class
+
+def state_clear_player(player_id):
     if player_id not in STATE['players']:
         return
     STATE['players'].pop(player_id)
     update_global()
+
+
+def state_init():
+    STATE['event_clock'] = 0
 
 
 if __name__ == '__main__':
