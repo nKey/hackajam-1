@@ -4,6 +4,13 @@
     <title>HackATank</title>
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.17/socket.io.js"></script>
+
+    <script type="text/javascript" src="game/phaser.js"></script>
+    <script type="text/javascript" src="game/map.js"></script>
+    <script type="text/javascript" src="game/tank.js"></script>
+    <script type="text/javascript" src="game/crank.js"></script>
+    <script type="text/javascript" src="game/game.js"></script>
+
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
             namespace = '/main';
@@ -79,6 +86,7 @@
                 gameState.clock = data.clock;
                 gameState.state = STATES['WAITING'];
                 socket.emit('event-game-start-ack');
+                game_init();
             });
             socket.on('event-clock-sync', function(data) {
                 gameState.clock = data.clock;
@@ -148,5 +156,7 @@
 
     <h2>Receive:</h2>
     <div id="log"></div>
+
+    <div id="game" style="display:hidden"></div>
 </body>
 </html>

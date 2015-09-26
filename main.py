@@ -4,7 +4,7 @@ from flask.ext.socketio import SocketIO, emit, join_room
 
 import uuid
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='game')
 app.config.update(
     DEBUG=True,
     SECRET_KEY='mostly-harmless!'

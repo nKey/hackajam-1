@@ -1,10 +1,15 @@
-var game = new Phaser.Game(1200, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
+var game;
 var lever;
 var crank;
 var map;
 var tank;
 var DEBUG = false;
+
+function game_init() {
+    game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game', {
+        preload: preload, create: create, update: update, render: render });
+}
 
 function preload() {
     map = new Map(game);
