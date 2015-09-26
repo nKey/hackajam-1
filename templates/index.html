@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>HackATank</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.17/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            namespace = '/main';
+            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            // receive handler for global data
+            socket.on('global', function(global) {
+                $('#log').append('<br>Received # global players count:' + global.players_count);
+            });
+            // receive handler for player data
+            socket.on('settings', function(settings) {
+                $('#player').text(settings.name);
+            });
+            // handlers for the different forms in the page
+            $('form#settings').submit(function(event) {
+                socket.emit('settings', {name: $('#settings_name').val()});
+                return false;
+            });
+            $('form#join').submit(function(event) {
+                socket.emit('join');
+                return false;
+            });
+            // receive handler for game state data
+            socket.on('state', function(state) {
+                $('#log').append('<br>Received # state for game id:' + state.game_id);
+                console.log(state);
+                onGameJoin(state);
+            });
+            // receive handler for error messages
+            socket.on('error', function(error) {
+                alert(error.message);
+            });
+        });
+        var onGameJoin = function(state) {
+            // init room state
+            $('#room-players').empty();
+            $.each(state.players, function(player_id, player){
+                $('#room-players').append(
+                    '<div id="' + player_id + '">'
+                    + player.name + ' <span id="ready-state">'
+                    + (player.ready ? 'Ready' : 'Waiting') + '</span></div>');
+            });
+            // listen room events
+            namespace = '/game';
+            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            socket.on('join', function(join) {
+                $('#room-players #' + join.player_id).remove();
+                $('#room-players').append('<div id="' + join.player_id + '">' + join.player_name + ' <span id="ready-state">Waiting</span></div>');
+            });
+            socket.on('leave', function(leave) {
+                $('#room-players #' + leave.player_id).remove();
+            })
+            socket.on('ready', function(ready) {
+                $('#room-players #' + ready.player_id + ' #ready-state').text('Ready');
+            });
+            $('form#ready').submit(function(event) {
+                socket.emit('ready');
+                return false;
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>HackATank</h1>
+
+
+    <h2>Main</h2>
+    <span>Player: <span id="player"></span></span>
+    <form id="settings" method="POST" action='#'>
+        <input type="text" name="settings_name" id="settings_name" placeholder="Username">
+        <input type="submit" value="Update">
+    </form>
+    <form id="join" method="POST" action='#'>
+        <input type="submit" value="Join Room">
+    </form>
+
+
+    <h2>Room</h2>
+    <h3>Players:</h3>
+    <div id="room-players"></div>
+    <form id="ready" method="POST" action='#'>
+        <input type="submit" value="Ready">
+    </form>
+
+
+    <h2>Receive:</h2>
+    <div id="log"></div>
+</body>
+</html>
