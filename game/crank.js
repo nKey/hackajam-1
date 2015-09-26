@@ -8,6 +8,8 @@ var centerX;
 var centerY;
 var diameter;
 
+var angle;
+
 function Crank(game, centerX, centerY, diameter) {
     this.game = game;
     this.centerX = centerX;
@@ -26,10 +28,14 @@ Crank.prototype.create = function() {
     buttonCircleSize = this.diameter/2 - axisSize/2;
     this.buttonCircle = new Phaser.Circle(this.outCircle.x + buttonCircleSize/2 + axisSize/2, this.outCircle.y, buttonCircleSize);
 
-    this.crank = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'crank');
+    this.crank = this.game.add.sprite(this.centerX, this.centerY, 'crank');
     this.crank.anchor.setTo(0.5, 0.5);
     this.crank.height = this.assetSize;
     this.crank.width = this.assetSize;
+    this.crank.fixedToCamera = true;
+    this.outCircle.fixedToCamera = true;
+    this.inCircle.fixedToCamera = true;
+    this.buttonCircle.fixedToCamera = true;
 }
 
 Crank.prototype.update = function() {
@@ -39,6 +45,7 @@ Crank.prototype.update = function() {
             this.buttonCircle.x = this.outCircle.x + (this.outCircle.radius - this.buttonCircle.radius) * Math.cos(angleRadius);
             this.buttonCircle.y = this.outCircle.y + (this.outCircle.radius - this.buttonCircle.radius) * Math.sin(angleRadius);
             this.crank.angle = angleRadius * (180 / Math.PI); 
+            this.angle = angleRadius;
         }
     }
 }
