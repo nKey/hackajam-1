@@ -8,7 +8,7 @@ var DEBUG = false;
 var playerNumber;
 
 function game_init(player) {
-    if(player == undefined){
+    if (player == undefined) {
         playerNumber = 1;
     }
     game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game', {
@@ -18,11 +18,11 @@ function game_init(player) {
 function preload() {
     map = new Map(game);
     tank = new Tank(game);
-    if(playerNumber == 1){
+    if (playerNumber == 1) {
         lever = new Lever(game, 1000, 305, 107, 294, 'right');
         game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
         game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_2_background.png');
-    }else{
+    } else {
         lever = new Lever(game, 100, 305, 107, 294, 'left');
         crank = new Crank(game, 1000, 450, 300);
         game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_1_background.png');
@@ -39,10 +39,10 @@ function create() {
     tank.create(map.blockedLayer);
     interfacePlayer = game.add.image(0, 0, 'interfacePlayer');
     interfacePlayer.fixedToCamera = true;
-    if(playerNumber == 1){
+    if (playerNumber == 1) {
         fireButton = game.add.button(38, 351, 'fireButton', tank.fire, tank, 2, 1, 0);
         fireButton.fixedToCamera = true;
-    }else{
+    } else {
         crank.create();
         crank.crank.fixedToCamera = true;
     }
@@ -51,7 +51,7 @@ function create() {
 
 function update() {
     map.update();
-    if(playerNumber == 2){
+    if (playerNumber == 2) {
         crank.update();
     }
     lever.update();
@@ -60,7 +60,7 @@ function update() {
 }
 
 function render() {
-    if(playerNumber == 2){
+    if (playerNumber == 2) {
         crank.render();
     }
     lever.render();
