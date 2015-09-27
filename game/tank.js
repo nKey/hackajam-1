@@ -15,6 +15,7 @@ var tankAngle = 0;
 var turretAngle;
 
 var fireCallback;
+var bulletsIndicator;
 
 function Tank(game) {
     this.game = game;
@@ -158,4 +159,14 @@ Tank.prototype.updateDebugControls = function () {
     if (currentSpeed > 0) {
         this.game.physics.arcade.velocityFromRotation(this.tank.rotation, currentSpeed, this.tank.body.velocity);
     }
+}
+
+Tank.prototype.fireCallback = function () {
+    for (var i = 0; i < 5; i++) {
+        this.bulletsIndicator[i].visible = (i < this.numberOfBullets);
+    }
+}
+
+Tank.prototype.insertBulletIndicator = function(bulletsIndicator){
+    this.bulletsIndicator = bulletsIndicator;
 }

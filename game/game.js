@@ -63,9 +63,9 @@ Game.prototype.create = function() {
     this.lever.create();
 
     this.createNumberOfBulletsIndicator();
-    this.tank.fireCallback = function () {
-        this.updateNumberOfBulletsIndicator();
-    };
+    // this.tank.fireCallback = function () {
+    //     game.updateNumberOfBulletsIndicator();
+    // };
 }
 
 Game.prototype.createNumberOfBulletsIndicator = function() {
@@ -75,13 +75,14 @@ Game.prototype.createNumberOfBulletsIndicator = function() {
         this.bulletIndicator.fixedToCamera = true;
         this.bulletsIndicator[i] = this.bulletIndicator;
     };
+    this.tank.insertBulletIndicator(this.bulletsIndicator);
 }
 
-Game.prototype.updateNumberOfBulletsIndicator = function() {
-    for (var i = 0; i < 5; i++) {
-        this.bulletsIndicator[i].visible = (i < this.tank.numberOfBullets);
-    }
-}
+// Game.prototype.updateNumberOfBulletsIndicator = function() {
+//     for (var i = 0; i < 5; i++) {
+//         this.bulletsIndicator[i].visible = (i < this.tank.numberOfBullets);
+//     }
+// }
 
 Game.prototype.update = function() {
     this.map.update();
