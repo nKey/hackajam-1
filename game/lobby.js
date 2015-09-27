@@ -15,12 +15,13 @@ Lobby.prototype.preload = function() {
 Lobby.prototype.create = function () {
     game.add.sprite(0, 0, 'menu');
 
-    var bmpText = game.add.bitmapText(0, 200, 'roboto', network_player.name, 20);
-    bmpText.x = 234 - (bmpText.width/2);
-
-    var bmpText = game.add.bitmapText(0, 200, 'roboto', network_player.name, 20);
-    bmpText.x = 654 - (bmpText.width/2);
-    
+    if (network_player.number == 1) {
+        var bmpText = game.add.bitmapText(0, 200, 'roboto', network_player.name, 20);
+        bmpText.x = 234 - (bmpText.width/2);
+    } else {
+        var bmpText = game.add.bitmapText(0, 200, 'roboto', network_player.name, 20);
+        bmpText.x = 654 - (bmpText.width/2);
+    }
     this.add.button(22, game.height - 92, 'back_button', this.back, this);
     this.add.button(game.width - 480, game.height - 92, 'ready_button', this.gameStart, this);
 }

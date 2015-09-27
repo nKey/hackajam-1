@@ -23,10 +23,14 @@ Game.prototype.preload = function() {
     this.map = new Map(this.game);
     this.tank = new Tank(this.game);
     this.enemy = new EnemyTank(this.game, this.tank);
+    this.game.load.spritesheet('missionCompleted', 'game/assets/mission_completed.png');
+    this.game.load.spritesheet('missionFailure', 'game/assets/mission_failure.png');
     this.game.load.spritesheet('smile', 'game/assets/smile.png');
     this.game.load.spritesheet('smileChanged', 'game/assets/smile_changed.png');
     this.game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
     this.game.load.audio('gameMusic', ['game/assets/sound/game_music.mp3']);
+    this.game.load.audio('victoryExplosion', ['game/assets/sound/victory_explosion.mp3']);
+
     if (network_player.number == 1) {
         this.lever = new Lever(this.game, 1000, 305, 107, 294, 'right');
         this.game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
@@ -111,6 +115,15 @@ Game.prototype.update = function() {
     this.lever.update();
     this.tank.update();
     this.enemy.update();
+    if (this.enemy.health <= 0 && this.hasAlert()) {
+        this.missionCompleted();
+    } else if (this.tank.numberOfBullets <= 0 && this.hasAlert()) {
+        this.missionFailed();
+    }
+}
+
+Game.prototype.hasAlert = function() {
+    return this.missionFailureAlert != undefined || this.missionCompletedAlert == undefined;
 }
 
 Game.prototype.render = function() {
@@ -132,4 +145,15 @@ Game.prototype.moveTurret = function(angle) {
 
 Game.prototype.turretFire = function() {
     this.tank.fire();
+}
+
+Game.prototype.missionCompleted = function() {
+    this.missionCompletedAlert = this.game.add.image(360, 190, 'missionCompleted');
+
+    sound = game.add.audio('victoryExplosion');
+    sound.play();
+}
+
+Game.prototype.missionFailed = function() {
+    this.missionFailedAlert = this.game.add.image(400, 218, 'missionFailure');
 }
