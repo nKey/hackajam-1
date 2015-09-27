@@ -58,7 +58,7 @@ EnemyTank.prototype.setupTank = function() {
     this.turret.bringToTop();
 
     this.tank.x = 600;
-    this.tank.y = 350;
+    this.tank.y = 800;
 }
 
 EnemyTank.prototype.update = function () {
