@@ -67,8 +67,35 @@ Nickname.prototype.lobby = function() {
     } else {
         network_player.setName(this.myInput.canvasInput._value);
     }
+    network_callbacks.game_room_did_join = function (game_id, players) {
+        refreshPlayerNumber(players);
+        game.state.start('Lobby');
+    };
     network_handlers.game_room_join();
-    game.state.start('Lobby');
+};
+
+function refreshPlayerNumber (players) {
+    if (players != undefined) {
+        var player1 = undefined;
+        $.each(players, function(player_id, player){
+            player.id = player_id;
+            if (player1 == undefined) {
+                player1 = player;
+                player1.number = 1;
+            } else {
+                if (String(player_id).localeCompare(String(player1.id))) {
+                    player1.number = 2;
+                    player1 = player;
+                    player1.number = 1;
+                } else {
+                    player.number = 2;
+                }
+            }
+        });
+        if (player1 != network_player) {
+            network_player.number = 2;
+        }
+    }
 }
 
 Nickname.prototype.back = function() {

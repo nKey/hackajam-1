@@ -24,14 +24,6 @@
 
     <script type="text/javascript" charset="utf-8">
         // respond to network events
-        network_callbacks.game_room_did_join = function(game_id, players) {
-            refreshPlayerNumber(players);
-        };
-        network_callbacks.game_room_update_join = function(player_id, player_name) {
-            if (player_id != network_player.id) {
-                setupPlayer1(network_player.id, player_id);
-            }
-        };
         // game data events
         network_callbacks.game_will_start = function() {
             console.log('Waiting to sync players');
@@ -55,42 +47,9 @@
             network_register_main();
             game_init();
         });
-        function setupPlayer1(myID, otherPlayerID) {
-            if (myID.localeCompare(otherPlayerID)) {
-                network_player.number = 1;
-            } else {
-                network_player.number = 2;
-            }
-        }
-        function refreshPlayerNumber (players) {
-            if (players != undefined) {
-                var player1 = undefined;
-                $.each(players, function(player_id, player){
-                    player.id = player_id;
-                    if (player1 == undefined) {
-                        player1 = player;
-                        player1.number = 1;
-                    } else {
-                        if (String(player_id).localeCompare(String(player1.id))) {
-                            player1.number = 2;
-                            player1 = player;
-                            player1.number = 1;
-                        } else {
-                            player.number = 2;
-                        }
-                    }
-                });
-                if (player1 != network_player) {
-                    network_player.number = 2;
-                }
-            }
-        }
     </script>
 </head>
 <body>
     <div id="game"></div>
 </body>
 </html>
-
-
-
