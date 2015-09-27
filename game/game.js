@@ -14,10 +14,10 @@ function Game(game) {
 }
 
 Game.prototype.init = function() {
-    if (this.DEBUG == undefined) {
+    if (this.DEBUG === undefined) {
         this.DEBUG = false;
     }
-    if (this.playerNumber == undefined) {
+    if (this.playerNumber === undefined) {
         this.playerNumber = 1;
     }
 }
@@ -120,7 +120,7 @@ Game.prototype.render = function() {
 Game.prototype.moveTank = function(movement, rotation) {
     this.tank.currentSpeed = movement * 50;
     this.tank.tankAngle = rotation/3;
-} 
+}
 
 Game.prototype.moveTurret = function(angle) {
     this.tank.turretAngle = angle;
