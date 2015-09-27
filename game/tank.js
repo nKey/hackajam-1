@@ -191,7 +191,7 @@ Tank.prototype.broadcastPosition = function(){
     network_handlers.dead_reckoning(this.tank.x, this.tank.y, this.tank.angle);
 }
 
-Tank.prototype.updatePostion = function(x, y, angle){
+Tank.prototype.updatePosition = function(x, y, angle){
     this.tank.x = x;
     this.tank.y = y;
     this.tank.angle = angle;

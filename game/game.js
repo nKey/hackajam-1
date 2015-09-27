@@ -62,7 +62,12 @@ Game.prototype.create = function() {
         this.crank.create();
         this.crank.crank.fixedToCamera = true;
         this.createSmileRight();
-        network_callbacks.game_dead_reckoning = this.tank.updatePosition;
+        var tank = this.tank;
+        network_callbacks.game_dead_reckoning = function(x, y, angle){
+            tank.tank.x = x;
+            tank.tank.y = y;
+            tank.tank.angle = angle;
+        }
     }
     this.lever.create();
 
