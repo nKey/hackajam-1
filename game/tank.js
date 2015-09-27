@@ -15,6 +15,7 @@ var tankAngle = 0;
 var turretAngle;
 
 var fireCallback;
+var bulletsIndicator;
 
 function Tank(game) {
     this.game = game;
@@ -158,4 +159,29 @@ Tank.prototype.updateDebugControls = function () {
     if (currentSpeed > 0) {
         this.game.physics.arcade.velocityFromRotation(this.tank.rotation, currentSpeed, this.tank.body.velocity);
     }
+}
+
+Tank.prototype.fireCallback = function () {
+    for (var i = 0; i < 5; i++) {
+        this.bulletsIndicator[i].visible = (i < this.numberOfBullets);
+    }
+    
+    this.hideSmileAndShowSmileChanged();
+    setTimeout(this.hideSmileChangedAndShowSmile, 1000);
+}
+
+Tank.prototype.insertBulletIndicator = function(bulletsIndicator, smile, smileChanged) {
+    this.bulletsIndicator = bulletsIndicator;
+    this.smile = smile;
+    this.smileChanged  = smileChanged;
+}
+
+Tank.prototype.hideSmileAndShowSmileChanged = function() {
+    this.smile.visible = false;
+    this.smileChanged.visible = true;
+}
+
+Tank.prototype.hideSmileChangedAndShowSmile = function() {
+    this.smile.visible = true;
+    this.smileChanged.visible = false;
 }
