@@ -11,20 +11,26 @@ var nextFire = 0;
 //map
 var blockedLayer;
 
+// Moviment controls
+var tankAngle = 0;
+var turretAngle;
+
 function Tank(game) {
     this.game = game;
 
     this.currentSpeed = 0;
     this.fireReloadDelay = 2600;
     this.nextFire = 0;
+    this.tankAngle = 0;
+    this.turretAngle = 0;
 }
 
 Tank.prototype.preload = function() {
-    this.game.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
+    this.game.load.atlas('tank', 'game/assets/tank.png', 'game/assets/tank.json');
     // this.game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tank.json');
-    this.game.load.image('bullet', 'assets/bullet.png');
-    game.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
-    game.load.audio('tankFireSound', ['assets/sound/tank_fire.ogg']);
+    this.game.load.image('bullet', 'game/assets/bullet.png');
+    game.load.spritesheet('kaboom', 'game/assets/explosion.png', 64, 64, 23);
+    game.load.audio('tankFireSound', ['game/assets/sound/tank_fire.ogg']);
 }
 
 Tank.prototype.create = function(blockedLayer){
@@ -83,27 +89,13 @@ Tank.prototype.setupTank = function() {
     this.game.camera.focusOnXY(600,300);
 }
 
-Tank.prototype.update = function (crankAngle) {
+Tank.prototype.update = function () {
     this.game.physics.arcade.collide(this.tank, this.blockedLayer);
 
-    if (this.cursors.left.isDown) {
-        this.tank.angle -= 4;
-    } else if (this.cursors.right.isDown) {
-        this.tank.angle += 4;
-    }
+    currentSpeed = this.currentSpeed;
+    this.tank.angle = this.tank.angle + this.tankAngle;
 
-    if (this.cursors.up.isDown) {
-        //  The speed we'll travel at
-        currentSpeed = 200;
-    } else {
-        if (currentSpeed > 0) {
-            currentSpeed -= 4;
-        }
-    }
-
-    if (currentSpeed > 0) {
-        this.game.physics.arcade.velocityFromRotation(this.tank.rotation, currentSpeed, this.tank.body.velocity);
-    }
+    this.game.physics.arcade.velocityFromRotation(this.tank.rotation, currentSpeed, this.tank.body.velocity);
 
     //  Position all the parts and align rotations
     this.shadow.x = this.tank.x;
@@ -113,16 +105,13 @@ Tank.prototype.update = function (crankAngle) {
     this.turret.x = this.tank.x;
     this.turret.y = this.tank.y;
     
-    if (crankAngle == undefined) {
-        crankAngle = 0;
+    if (this.turretAngle == undefined) {
+        this.turretAngle = 0;
     }
-
-    this.turret.rotation = this.tank.rotation + crankAngle;
+    this.turret.rotation = this.tank.rotation + this.turretAngle;
 }
 
 Tank.prototype.fire = function () {
-    console.log(this.game.time.now);
-    console.log(this.nextFire);
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0) {
         this.nextFire = this.game.time.now + this.fireReloadDelay;
         var bullet = this.bullets.getFirstExists(false);

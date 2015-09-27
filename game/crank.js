@@ -19,7 +19,7 @@ function Crank(game, centerX, centerY, diameter) {
 }
 
 Crank.prototype.preload = function() {
-    this.game.load.image('crank', 'assets/crank.png');
+    this.game.load.image('crank', 'game/assets/crank.png');
 }
 
 Crank.prototype.create = function() {

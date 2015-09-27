@@ -5,8 +5,8 @@ function Map(game){
 }
 
 Map.prototype.preload = function() {
-    this.game.load.tilemap('map1', 'tilemap/map1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('gameTiles', 'tilemap/tiles.png');
+    this.game.load.tilemap('map1', 'game/tilemap/map1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('gameTiles', 'game/tilemap/tiles.png');
 }
 
 Map.prototype.create = function() {
