@@ -17,9 +17,6 @@ Game.prototype.init = function() {
     if (this.DEBUG === undefined) {
         this.DEBUG = false;
     }
-    if (this.playerNumber === undefined) {
-        this.playerNumber = 1;
-    }
 }
 
 Game.prototype.preload = function() {
@@ -30,7 +27,7 @@ Game.prototype.preload = function() {
     this.game.load.spritesheet('smileChanged', 'game/assets/smile_changed.png');
     this.game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
     this.game.load.audio('gameMusic', ['game/assets/sound/game_music.mp3']);
-    if (this.playerNumber == 1) {
+    if (network_player.number == 1) {
         this.lever = new Lever(this.game, 1000, 305, 107, 294, 'right');
         this.game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
         this.game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_2_background.png');
@@ -56,14 +53,16 @@ Game.prototype.create = function() {
     this.enemy.create(this.map.blockedLayer);
     this.interfacePlayer = this.game.add.image(0, 0, 'interfacePlayer');
     this.interfacePlayer.fixedToCamera = true;
-    if (this.playerNumber == 1) {
+    if (network_player.number == 1) {
         this.fireButton = this.game.add.button(38, 351, 'fireButton', network_handlers.action_fire, network_handlers, 2, 1, 0);
         this.fireButton.fixedToCamera = true;
         this.createSmileLeft();
+        this.game.time.events.loop(networkLag, this.tank.broadcastPosition, this.tank);
     } else {
         this.crank.create();
         this.crank.crank.fixedToCamera = true;
         this.createSmileRight();
+        network_callbacks.game_dead_reckoning = this.tank.updatePosition;
     }
     this.lever.create();
 
@@ -101,7 +100,7 @@ Game.prototype.createNumberOfBulletsIndicator = function() {
 
 Game.prototype.update = function() {
     this.map.update();
-    if (this.playerNumber == 2) {
+    if (network_player.number == 2) {
         this.crank.update();
     }
     this.lever.update();
@@ -110,7 +109,7 @@ Game.prototype.update = function() {
 }
 
 Game.prototype.render = function() {
-    if (this.playerNumber == 2) {
+    if (network_player.number == 2) {
         this.crank.render();
     }
     this.lever.render();
