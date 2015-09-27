@@ -23,6 +23,7 @@ function EnemyTank(game, player) {
 }
 
 EnemyTank.prototype.preload = function() {
+    this.game.load.audio('tankExplosion', ['game/assets/sound/tank_explosion.mp3']);
     this.game.load.atlas('tank2', 'game/assets/tank_2.png', 'game/assets/tank_2.json');
 }
 
@@ -85,6 +86,9 @@ function bulletHitEnemy(tank, bullet) {
 
         explosionAnimation.reset(tank.x, tank.y);
         explosionAnimation.play('kaboom', 30, false, true);
+
+        sound = this.game.add.audio('tankExplosion');
+        sound.play();
     }
 }
 
