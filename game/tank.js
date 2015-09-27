@@ -187,3 +187,12 @@ Tank.prototype.hideSmileChangedAndShowSmile = function(smile, smileChanged) {
     smile.visible = true;
     smileChanged.visible = false;
 }
+Tank.prototype.broadcastPosition = function(){
+    network_handlers.dead_reckoning(this.tank.x, this.tank.y, this.tank.angle);
+}
+
+Tank.prototype.updatePostion = function(x, y, angle){
+    this.tank.x = x;
+    this.tank.y = y;
+    this.tank.angle = angle;
+}

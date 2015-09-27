@@ -161,6 +161,7 @@ def event_control_turret(value):
 def event_action_fire():
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
+    # TODO: send turrent angle for bullet sync
     emit('action-fire', {'clock': STATE['event_clock']}, room=game_id, broadcast=True)
 
 
@@ -168,8 +169,15 @@ def event_action_fire():
 def event_notify_position(data):
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
-    emit('event-position', {'x': data.x, 'y': data.y, 'angle': data.angle, 'clock': STATE['event_clock']},
-        room=game_id)
+    data = {
+        'x': data.get('x'),
+        'y': data.get('y'),
+        'angle': data.get('angle'),
+        'turret_angle': data.get('turret_angle'),
+        'clock': STATE['event_clock'],
+    }
+    data = {k: v for k, v in data.iteritems() if v is not None}
+    emit('event-position', data, room=game_id)
 
 
 def event_notify_movement():

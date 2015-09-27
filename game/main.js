@@ -1,5 +1,6 @@
 var game;
 var DEBUG = false;
+var networkLag = 40;
 
 function game_init(player) {
     game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'game');

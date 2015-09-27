@@ -30,6 +30,7 @@ var network_callbacks = {
     game_move_event: function(movement, rotation) {},
     game_move_turret: function(angle) {},
     game_fire: function() {},
+    game_dead_reckoning: function(x, y, angle){}
 };
 
 // call these handler functions to perform network operations
@@ -128,6 +129,10 @@ function network_register_game(state) {
     socket.on('action-fire', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_fire();
+    });
+    socket.on('event-position', function(data) {
+        network_sync.clock = data.clock;
+        network_callbacks.game_dead_reckoning(data.x, data.y, data.angle);
     });
     // handlers for UI actions
     network_handlers.game_room_ready = function() {

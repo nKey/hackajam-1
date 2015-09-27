@@ -17,7 +17,8 @@ Nickname.prototype.create = function () {
     
     this.myInput = this.createInput(this.game.world.centerX, this.game.world.centerY + 100);
     this.myInput.anchor.set(0.5);
-    this.myInput.canvasInput.value('');
+
+    this.myInput.canvasInput.value(network_player.name);
     
     var buttonCache = game.cache.getImage('cancel_button');
     var button = this.add.button(game.world.centerX - buttonCache.width - 10, 

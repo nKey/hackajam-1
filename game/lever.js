@@ -35,6 +35,7 @@ Lever.prototype.create = function() {
     this.leverSprite.fixedToCamera = true;
     this.leverArea.fixedToCamera = true;
     this.leverTrigger.fixedToCamera = true;
+    this.leverSprite.animations.frame = 2;
 }
 
 Lever.prototype.update = function() {
@@ -47,9 +48,9 @@ Lever.prototype.update = function() {
             normalizedLeverValue = (this.leverTrigger.y - this.leverArea.y) / (this.leverArea.height - this.leverTrigger.height);
             this.leverSprite.animations.frame = Math.ceil(normalizedLeverValue * this.leverSprite.animations.frameTotal) - 1;
             if(this.direction == 'left'){
-                network_handlers.control_lever_left(this.leverSprite.animations.frame);
+                network_handlers.control_lever_left(this.leverSprite.animations.frame - 2);
             }else if(this.direction == 'right'){
-                network_handlers.control_lever_right(this.leverSprite.animations.frame);
+                network_handlers.control_lever_right(this.leverSprite.animations.frame - 2);
             }
             
         }
