@@ -1,9 +1,14 @@
 function Nickname(){
 }
 
+var myInput;
+
 Nickname.prototype.preload = function() {
-        game.load.image('menu', 'game/assets/menu_background.png');
-         game.load.image('button', 'game/assets/tank_button.png');
+    game.load.image('menu', 'game/assets/menu_background.png');
+    game.load.image('button', 'game/assets/tank_button.png');
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    this.scale.pageAlignHorizontally = true;
+    this.scale.updateLayout();
 }
 
 Nickname.prototype.create = function () {
@@ -13,7 +18,6 @@ Nickname.prototype.create = function () {
     this.myInput = this.createInput(this.game.world.centerX + 30, this.game.world.centerY + 100);
     this.myInput.anchor.set(0.5);
     this.myInput.canvasInput.value('');
-    this.myInput.canvasInput.focus();
     
     var buttonCache = game.cache.getImage('button');
     var button = this.add.button(game.world.centerX + 45 - (buttonCache.width/2), 
@@ -29,9 +33,9 @@ Nickname.prototype.create = function () {
 
 Nickname.prototype.createInput = function(x, y) {
     var bmd = this.add.bitmapData(350, 110);    
-    var myInput = this.game.add.sprite(x, y, bmd);
+    this.myInput = this.game.add.sprite(x, y, bmd);
 
-    myInput.canvasInput = new CanvasInput({
+    this.myInput.canvasInput = new CanvasInput({
         canvas: bmd.canvas,
         fontSize: 30,
         fontFamily: 'Arial',
@@ -46,11 +50,11 @@ Nickname.prototype.createInput = function(x, y) {
         innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
         placeHolder: ''
     });
-    myInput.inputEnabled = true;
-    myInput.input.useHandCursor = true;    
-    myInput.events.onInputUp.add(this.inputFocus, this);
+    this.myInput.inputEnabled = true;
+    this.myInput.input.useHandCursor = true;    
+    this.myInput.events.onInputUp.add(this.inputFocus, this);
 
-    return myInput;
+    return this.myInput;
 }
 
 Nickname.prototype.inputFocus = function(sprite) {
@@ -58,6 +62,7 @@ Nickname.prototype.inputFocus = function(sprite) {
 }
 
 Nickname.prototype.lobby = function() {
+    network_player.setName(this.myInput.canvasInput._value);
     game.state.start('Lobby');
 }
 

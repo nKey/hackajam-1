@@ -2,8 +2,7 @@ var game;
 var DEBUG = false;
 
 function game_init(player) {
-    game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game');
-
+    game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'game');
 	// First parameter is how our state will be called.
 	// Second parameter is an object containing the needed methods for state functionality
 	game.state.add('Welcome', Welcome);
@@ -11,7 +10,7 @@ function game_init(player) {
 	game.state.add('Nickname', Nickname);
 	game.state.add('Lobby', Lobby);
 	game.state.add('Game', Game);
-	game.state.start('Game', game);
+	game.state.start('Welcome');
 }
 
 function moveTank(movement, rotation){

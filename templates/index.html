@@ -22,6 +22,7 @@
     <script type="text/javascript" src="game/main.js"></script>
 
     <script type="text/javascript" charset="utf-8">
+    game_init();
         // game data
         var STATES = {
             'WAITING': 0,
@@ -93,30 +94,30 @@
         };
         $(document).ready(function(){
             // handlers for the different forms in the page
-            $('form#settings').submit(function(event) {
-                var name = $('#settings_name').val();
-                network_player.setName(name);
-                return false;
-            });
-            $('form#join').submit(function(event) {
-                network_handlers.game_room_join();
-                return false;
-            });
-            $('form#ready').submit(function(event) {
-                network_handlers.game_room_ready();
-                return false;
-            });
-            // control events
-            $('form#pull-left').submit(function(event) {
-                var value = parseInt($('#control_lever_left').val());
-                network_handlers.control_lever_left(value);
-                return false;
-            });
-            $('form#pull-right').submit(function(event) {
-                var value = parseInt($('#control_lever_right').val());
-                network_handlers.control_lever_right(value);
-                return false;
-            });
+            // $('form#settings').submit(function(event) {
+            //     var name = $('#settings_name').val();
+            //     network_player.setName(name);
+            //     return false;
+            // });
+            // $('form#join').submit(function(event) {
+            //     network_handlers.game_room_join();
+            //     return false;
+            // });
+            // $('form#ready').submit(function(event) {
+            //     network_handlers.game_room_ready();
+            //     return false;
+            // });
+            // // control events
+            // $('form#pull-left').submit(function(event) {
+            //     var value = parseInt($('#control_lever_left').val());
+            //     network_handlers.control_lever_left(value);
+            //     return false;
+            // });
+            // $('form#pull-right').submit(function(event) {
+            //     var value = parseInt($('#control_lever_right').val());
+            //     network_handlers.control_lever_right(value);
+            //     return false;
+            // });
             // init socket connection
             network_register_main();
         });
@@ -158,7 +159,7 @@
     </script>
 </head>
 <body>
-    <h1>AINOTA TANKS</h1>
+    <!-- <h1>AINOTA TANKS</h1>
 
 
     <h2>Main</h2>
@@ -192,6 +193,6 @@
     <h2>Receive:</h2>
     <div id="log"></div>
 
-    <div id="game" style="display:hidden"></div>
+    <div id="game" style="display:hidden"></div> -->
 </body>
 </html>

@@ -135,4 +135,7 @@ function network_register_game(state) {
     network_handlers.control_turret = function(value) {
         socket.emit('control-turret', value);
     };
+    network_handlers.settings_name = function(value) {
+        socket.emit('settings', {'name': value});
+    };
 }

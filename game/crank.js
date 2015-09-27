@@ -9,6 +9,8 @@ var centerY;
 var diameter;
 
 var angle;
+var nextCrankSound;
+var crankSoundDelay;
 
 function Crank(game, centerX, centerY, diameter) {
     this.game = game;
@@ -16,10 +18,13 @@ function Crank(game, centerX, centerY, diameter) {
     this.centerY = centerY;
     this.diameter = diameter;
     this.assetSize = (this.diameter/4)*3;
+    this.nextCrankSound = 0;
+    this.crankSoundDelay = 400;
 }
 
 Crank.prototype.preload = function() {
     this.game.load.image('crank', 'game/assets/crank.png');
+    this.game.load.audio('crankSound', ['game/assets/sound/crank.ogg']);
 }
 
 Crank.prototype.create = function() {
@@ -44,9 +49,16 @@ Crank.prototype.update = function() {
             angleRadius = this.getAngle();
             this.buttonCircle.x = this.outCircle.x + (this.outCircle.radius - this.buttonCircle.radius) * Math.cos(angleRadius);
             this.buttonCircle.y = this.outCircle.y + (this.outCircle.radius - this.buttonCircle.radius) * Math.sin(angleRadius);
-            this.crank.angle = angleRadius * (180 / Math.PI); 
+            this.crank.angle = angleRadius * (180 / Math.PI);
             this.angle = angleRadius;
             network_handlers.control_turret(angleRadius);
+
+            console.log(angleRadius);
+            if (angleRadius > 1.2 && angleRadius < 1.4 && this.game.time.now > this.nextCrankSound) {
+                this.nextCrankSound = this.game.time.now + this.crankSoundDelay;
+                sound = game.add.audio('crankSound');
+                sound.play();
+            }
         }
     }
 }

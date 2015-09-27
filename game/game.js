@@ -7,6 +7,7 @@ var tank;
 var enemy;
 var DEBUG;
 var playerNumber;
+var bulletsIndicator;
 
 function Game(game) {
     this.game = game;
@@ -25,7 +26,7 @@ Game.prototype.preload = function() {
     this.map = new Map(this.game);
     this.tank = new Tank(this.game);
     this.enemy = new EnemyTank(this.game, this.tank);
-    console.log(this.game);
+    this.game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
     if (this.playerNumber == 1) {
         this.lever = new Lever(this.game, 1000, 305, 107, 294, 'right');
         this.game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
@@ -41,6 +42,9 @@ Game.prototype.preload = function() {
     this.tank.preload();
     this.enemy.preload();
     this.lever.preload();
+             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+this.scale.pageAlignHorizontally = true;
+this.scale.updateLayout();
 }
 
 Game.prototype.create = function() {
@@ -57,6 +61,26 @@ Game.prototype.create = function() {
         this.crank.crank.fixedToCamera = true;
     }
     this.lever.create();
+
+    this.createNumberOfBulletsIndicator();
+    this.tank.fireCallback = function () {
+        this.updateNumberOfBulletsIndicator();
+    };
+}
+
+Game.prototype.createNumberOfBulletsIndicator = function() {
+    this.bulletsIndicator = [];
+    for (var i = 0; i < this.tank.numberOfBullets; i++) {
+        this.bulletIndicator = this.game.add.image(25 + (54 * i), 15, 'bulletIndicator');
+        this.bulletIndicator.fixedToCamera = true;
+        this.bulletsIndicator[i] = this.bulletIndicator;
+    };
+}
+
+Game.prototype.updateNumberOfBulletsIndicator = function() {
+    for (var i = 0; i < 5; i++) {
+        this.bulletsIndicator[i].visible = (i < this.tank.numberOfBullets);
+    }
 }
 
 Game.prototype.update = function() {

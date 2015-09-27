@@ -5,7 +5,9 @@ function Menu(){
  Menu.prototype.preload = function() {
     game.load.image('menu', 'game/assets/menu_background.png');
     game.load.image('button', 'game/assets/tank_button.png');
-    game.load.bitmapFont('carrier_command', 'game/assets/fonts/carrier_command.png', 'game/assets/fonts/carrier_command.xml');
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    this.scale.pageAlignHorizontally = true;
+    this.scale.updateLayout();
 }
 
  Menu.prototype.create = function () {
