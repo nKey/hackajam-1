@@ -21,6 +21,7 @@ Lobby.prototype.create = function () {
 }
 
 Lobby.prototype.gameStart = function () {
+    game.sound.stopAll();
     this.state.start('Game', game);
 }
 

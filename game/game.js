@@ -67,12 +67,6 @@ Game.prototype.create = function() {
     }
     this.lever.create();
 
-    // tank.fireCallback = function () {
-    //     updateNumberOfBulletsIndicator();
-    //     hideSmileAndShowSmileChanged();
-    //     setTimeout(hideSmileChangedAndShowSmile, 1000);
-    // };
-
     musicPlayer = game.add.audio('gameMusic', 0.2, false);
     musicPlayer.play('', 0, 0.2, false);
 

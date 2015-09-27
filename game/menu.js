@@ -37,7 +37,7 @@ function Menu(){
  }
 
  Menu.prototype.startGame = function () {
-     this.state.start('Nickname');
+    this.state.start('Nickname');
   }
 
    Menu.prototype.credits = function () {
