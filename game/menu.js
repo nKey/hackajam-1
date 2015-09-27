@@ -15,7 +15,7 @@ function Menu(){
  Menu.prototype.create = function () {
      game.add.sprite(0, 0, 'menu');
      
-     for (var i = 0; i < 3; i++) 
+     for (var i = 0; i < 2; i++) 
      {
         var menu_name;
         var function_call;
@@ -27,10 +27,6 @@ function Menu(){
             var buttonCache = game.cache.getImage('button_credits');
             var button = this.add.button(game.world.centerX - (buttonCache.width/2), 
                                      game.world.centerY - 40 + (i * 110), 'button_credits', this.credits, this);
-        } else if (i == 2) {
-            var buttonCache = game.cache.getImage('button_quit');
-            var button = this.add.button(game.world.centerX - (buttonCache.width/2), 
-                                     game.world.centerY - 40 + (i * 110), 'button_quit', this.quit, this);
         }
  
     }
