@@ -23,7 +23,6 @@
     <script type="text/javascript" src="game/main.js"></script>
 
     <script type="text/javascript" charset="utf-8">
-    game_init();
         // respond to network events
         network_callbacks.game_room_did_join = function(game_id, players) {
             refreshPlayerNumber(players);
@@ -54,6 +53,7 @@
         $(document).ready(function(){
             // init socket connection
             network_register_main();
+            game_init();
         });
         function setupPlayer1(myID, otherPlayerID) {
             if (myID.localeCompare(otherPlayerID)) {
