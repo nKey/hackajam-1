@@ -8,78 +8,80 @@ var enemy;
 var DEBUG;
 var playerNumber;
 
-function game_init(player) {
-    if (DEBUG == undefined) {
-        DEBUG = false;
-    }
-    if (playerNumber == undefined) {
-        playerNumber = 1;
-    }
-    game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game', {
-        preload: preload, create: create, update: update, render: render });
+function Game(game) {
+    this.game = game;
 }
 
-function preload() {
-    map = new Map(game);
-    tank = new Tank(game);
-    enemy = new EnemyTank(game, tank);
-    if (playerNumber == 1) {
-        lever = new Lever(game, 1000, 305, 107, 294, 'right');
-        game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
-        game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_2_background.png');
+Game.prototype.init = function() {
+    if (this.DEBUG == undefined) {
+        this.DEBUG = false;
+    }
+    if (this.playerNumber == undefined) {
+        this.playerNumber = 1;
+    }
+}
+
+Game.prototype.preload = function() {
+    this.map = new Map(this.game);
+    this.tank = new Tank(this.game);
+    this.enemy = new EnemyTank(this.game, this.tank);
+    console.log(this.game);
+    if (this.playerNumber == 1) {
+        this.lever = new Lever(this.game, 1000, 305, 107, 294, 'right');
+        this.game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
+        this.game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_2_background.png');
     } else {
-        lever = new Lever(game, 100, 305, 107, 294, 'left');
-        crank = new Crank(game, 1000, 450, 300);
-        game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_1_background.png');
-        crank.preload();
+        this.lever = new Lever(this.game, 100, 305, 107, 294, 'left');
+        this.crank = new Crank(this.game, 1000, 450, 300);
+        this.game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_1_background.png');
+        this.crank.preload();
     }
-    map.preload();
-    tank.preload();
-    enemy.preload();
-    lever.preload();
+
+    this.map.preload();
+    this.tank.preload();
+    this.enemy.preload();
+    this.lever.preload();
 }
 
-function create() {
-    map.create();
-    tank.create(map.blockedLayer);
-    enemy.create(map.blockedLayer);
-    interfacePlayer = game.add.image(0, 0, 'interfacePlayer');
-    interfacePlayer.fixedToCamera = true;
-    if (playerNumber == 1) {
-        fireButton = game.add.button(38, 351, 'fireButton', tank.fire, tank, 2, 1, 0);
-        fireButton.fixedToCamera = true;
+Game.prototype.create = function() {
+    this.map.create();
+    this.tank.create(this.map.blockedLayer);
+    this.enemy.create(this.map.blockedLayer);
+    this.interfacePlayer = this.game.add.image(0, 0, 'interfacePlayer');
+    this.interfacePlayer.fixedToCamera = true;
+    if (this.playerNumber == 1) {
+        this.fireButton = this.game.add.button(38, 351, 'fireButton', this.tank.fire, this.tank, 2, 1, 0);
+        this.fireButton.fixedToCamera = true;
     } else {
-        crank.create();
-        crank.crank.fixedToCamera = true;
+        this.crank.create();
+        this.crank.crank.fixedToCamera = true;
     }
-    lever.create();
+    this.lever.create();
 }
 
-function update() {
-    map.update();
-    if (playerNumber == 2) {
-        crank.update();
+Game.prototype.update = function() {
+    this.map.update();
+    if (this.playerNumber == 2) {
+        this.crank.update();
     }
-    lever.update();
-    tank.update();
-    enemy.update();
-
+    this.lever.update();
+    this.tank.update();
+    this.enemy.update();
 }
 
-function render() {
-    if (playerNumber == 2) {
-        crank.render();
+Game.prototype.render = function() {
+    if (this.playerNumber == 2) {
+        this.crank.render();
     }
-    lever.render();
-    map.render();
+    this.lever.render();
+    this.map.render();
 }
 
-function moveTank(movement, rotation){
-    tank.currentSpeed = movement * 50;
-    tank.tankAngle = rotation/3;
+Game.prototype.moveTank = function(movement, rotation) {
+    this.tank.currentSpeed = movement * 50;
+    this.tank.tankAngle = rotation/3;
 } 
 
-function moveTurret(angle) {
-    tank.turretAngle = angle;
-
+Game.prototype.moveTurret = function(angle) {
+    this.tank.turretAngle = angle;
 }
