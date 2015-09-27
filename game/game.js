@@ -49,7 +49,7 @@ function create() {
     interfacePlayer.fixedToCamera = true;
 
     if (playerNumber == 1) {
-        fireButton = game.add.button(38, 351, 'fireButton', tank.fire, tank, 2, 1, 0);
+        fireButton = game.add.button(38, 351, 'fireButton', network_handlers.action_fire, this, 2, 1, 0);
         fireButton.fixedToCamera = true;
     } else {
         crank.create();
@@ -105,4 +105,8 @@ function moveTank(movement, rotation){
 function moveTurret(angle) {
     tank.turretAngle = angle;
 
+}
+
+function turretFire() {
+    tank.fire();
 }

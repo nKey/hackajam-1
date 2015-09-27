@@ -29,6 +29,7 @@ var network_callbacks = {
     game_did_start: function() {},
     game_move_event: function(movement, rotation) {},
     game_move_turret: function(angle) {},
+    game_fire: function() {},
 };
 
 // call these handler functions to perform network operations
@@ -122,6 +123,12 @@ function network_register_game(state) {
         network_sync.clock = data.clock;
         network_callbacks.game_move_turret(data.angle);
     });
+
+    // receive handler for movement events
+    socket.on('action-fire', function(data) {
+        network_sync.clock = data.clock;
+        network_callbacks.game_fire();
+    });
     // handlers for UI actions
     network_handlers.game_room_ready = function() {
         socket.emit('ready');
@@ -134,5 +141,8 @@ function network_register_game(state) {
     };
     network_handlers.control_turret = function(value) {
         socket.emit('control-turret', value);
+    };
+    network_handlers.action_fire = function(value) {
+        socket.emit('action-fire');
     };
 }
