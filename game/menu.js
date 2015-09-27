@@ -4,7 +4,9 @@ function Menu(){
 
  Menu.prototype.preload = function() {
     game.load.image('menu', 'game/assets/menu_background.png');
-    game.load.image('button', 'game/assets/tank_button.png');
+    game.load.image('button_play', 'game/assets/tank_play.png');
+    game.load.image('button_credits', 'game/assets/tank_credits.png');
+    game.load.image('button_quit', 'game/assets/tank_quit.png');
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
@@ -18,19 +20,19 @@ function Menu(){
         var menu_name;
         var function_call;
         if (i == 0) {
-            menu_name = 'Start';
-            function_call = this.startGame;
+            var buttonCache = game.cache.getImage('button_play');
+            var button = this.add.button(game.world.centerX - (buttonCache.width/2), 
+                                     game.world.centerY - 40 + (i * 110), 'button_play', this.startGame, this);
         } else if (i == 1) {
-            menu_name = 'Credits';
-            function_call = this.credits;
+            var buttonCache = game.cache.getImage('button_credits');
+            var button = this.add.button(game.world.centerX - (buttonCache.width/2), 
+                                     game.world.centerY - 40 + (i * 110), 'button_credits', this.credits, this);
         } else if (i == 2) {
-            menu_name = 'Quit';
-            function_call = this.quit;
+            var buttonCache = game.cache.getImage('button_quit');
+            var button = this.add.button(game.world.centerX - (buttonCache.width/2), 
+                                     game.world.centerY - 40 + (i * 110), 'button_quit', this.quit, this);
         }
-                 var buttonCache = game.cache.getImage('button');
-        var button = this.add.button(game.world.centerX + 45 - (buttonCache.width/2), 
-                                     game.world.centerY - 40 + (i * 110), 'button', function_call, this);
-         
+ 
     }
  }
 

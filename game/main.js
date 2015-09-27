@@ -9,6 +9,7 @@ function game_init(player) {
 	game.state.add('Menu', Menu);
 	game.state.add('Nickname', Nickname);
 	game.state.add('Lobby', Lobby);
+	game.state.add('Credits', Credits);
 	game.state.add('Game', Game);
 	game.state.start('Welcome');
 }
