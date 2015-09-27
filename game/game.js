@@ -24,6 +24,8 @@ function preload() {
     map = new Map(game);
     tank = new Tank(game);
     enemy = new EnemyTank(game, tank);
+    game.load.spritesheet('smile', 'game/assets/smile.png');
+    game.load.spritesheet('smileChanged', 'game/assets/smile_changed.png');
     game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
     game.load.audio('gameMusic', ['game/assets/sound/game_music.mp3']);
     if (playerNumber == 1) {
@@ -52,19 +54,45 @@ function create() {
     if (playerNumber == 1) {
         fireButton = game.add.button(38, 351, 'fireButton', network_handlers.action_fire, this, 2, 1, 0);
         fireButton.fixedToCamera = true;
+        createSmileLeft();
     } else {
         crank.create();
         crank.crank.fixedToCamera = true;
+        createSmileRight();
     }
     lever.create();
 
     createNumberOfBulletsIndicator();
     tank.fireCallback = function () {
         updateNumberOfBulletsIndicator();
+        hideSmileAndShowSmileChanged();
+        setTimeout(hideSmileChangedAndShowSmile, 1000);
     };
 
     musicPlayer = game.add.audio('gameMusic', 0.2, false);
     musicPlayer.play('', 0, 0.2, false);
+}
+
+function createSmileLeft() {
+    smile = game.add.image(85, 168, 'smile');
+    smileChanged = game.add.image(85, 168, 'smileChanged');
+    smileChanged.visible = false;
+}
+
+function createSmileRight() {
+    smile = game.add.image(970, 155, 'smile');
+    smileChanged = game.add.image(970, 155, 'smileChanged');
+    smileChanged.visible = false;
+}
+
+function hideSmileAndShowSmileChanged() {
+    smile.visible = false;
+    smileChanged.visible = true;
+}
+
+function hideSmileChangedAndShowSmile() {
+    smile.visible = true;
+    smileChanged.visible = false;
 }
 
 function createNumberOfBulletsIndicator() {
