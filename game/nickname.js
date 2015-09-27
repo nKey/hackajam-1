@@ -51,7 +51,7 @@ Nickname.prototype.createInput = function(x, y) {
         placeHolder: ''
     });
     this.myInput.inputEnabled = true;
-    this.myInput.input.useHandCursor = true;    
+    this.myInput.input.useHandCursor = true;
     this.myInput.events.onInputUp.add(this.inputFocus, this);
 
     return this.myInput;
@@ -69,7 +69,7 @@ Nickname.prototype.lobby = function() {
     }
     network_callbacks.game_room_did_join = function (game_id, players) {
         refreshPlayerNumber(players);
-        game.state.start('Lobby');
+        var lobby = game.state.start('Lobby', true, false, players);
     };
     network_handlers.game_room_join();
 };

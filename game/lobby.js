@@ -1,4 +1,8 @@
-function Lobby(){
+function Lobby() {
+}
+
+Lobby.prototype.init = function(players) {
+    this.lobby_players = players;
 }
 
 Lobby.prototype.preload = function() {
@@ -14,6 +18,14 @@ Lobby.prototype.preload = function() {
 
 Lobby.prototype.create = function () {
     game.add.sprite(0, 0, 'menu');
+
+    $.each(this.lobby_players, function(player_id, player) {
+        if (player.number === 1) {
+            showPlayer1(player.name);
+        } else {
+            showPlayer2(player.name);
+        }
+    });
 
     if (network_player.number == 1) {
         showPlayer1(network_player.name);
