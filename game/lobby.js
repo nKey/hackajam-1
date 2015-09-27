@@ -17,7 +17,7 @@ Lobby.prototype.create = function () {
     bmpText = game.add.bitmapText(200, 100, 'desyrel', network_player.name, 64);
     
     this.add.button(22, game.height - 92, 'back_button', this.back, this);
-    this.add.button(game.width - 480, game.height - 92, 'ready_button', this.back, this);
+    this.add.button(game.width - 480, game.height - 92, 'ready_button', this.gameStart, this);
 }
 
 Lobby.prototype.gameStart = function () {
