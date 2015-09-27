@@ -39,6 +39,7 @@ var network_handlers = {
     control_lever_left: function(value) {},
     control_lever_right: function(value) {},
     action_fire: function() {},
+    dead_reckoning: function(x, y, angle) {},
 };
 
 
@@ -118,13 +119,11 @@ function network_register_game(state) {
         network_sync.clock = data.clock;
         network_callbacks.game_move_event(data.x, data.r);
     });
-
     // receive handler for movement events
     socket.on('turret-movement', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_move_turret(data.angle);
     });
-
     // receive handler for movement events
     socket.on('action-fire', function(data) {
         network_sync.clock = data.clock;
@@ -145,5 +144,8 @@ function network_register_game(state) {
     };
     network_handlers.action_fire = function() {
         socket.emit('action-fire');
+    };
+    network_handlers.dead_reckoning = function(x, y, angle) {
+        socket.emit('dead-reckoning', {x: x, y: y, angle: angle});
     };
 }

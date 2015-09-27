@@ -24,71 +24,26 @@
 
     <script type="text/javascript" charset="utf-8">
     game_init();
-        // game data
-        var STATES = {
-            'WAITING': 0,
-            'RUNNING': 1,
-            0: 'WAITING',
-            1: 'RUNNING',
-        };
-        var gameState = {
-            'state': 0,
-            'movement': 0,
-            'rotation': 0,
-        };
         // respond to network events
-        network_callbacks.global_player_update = function(player) {
-            $('#player').text(player.name);
-        };
-        network_callbacks.global_players_count = function(count) {
-            $('#log').append('<br>Received # global players count:' + count);
-        };
-        network_callbacks.game_room_will_join = function(game_id, state) {
-            $('#log').append('<br>Received # state for game id:' + game_id);
-            console.log(state);
-        };
         network_callbacks.game_room_did_join = function(game_id, players) {
-            // init room state
-            $('#room-players').empty();
             refreshPlayerNumber(players);
-            $.each(players, function(player_id, player){
-                $('#room-players').append(
-                    '<div id="' + player_id + '">'
-                    + player.name + ' <span id="ready-state">'
-                    + (player.ready ? 'Ready' : 'Waiting') + ' - ' + player.number + '</span></div>');
-            });
         };
         network_callbacks.game_room_update_join = function(player_id, player_name) {
-            $('#room-players #' + player_id).remove();
-            $('#room-players').append('<div id="' + player_id + '">'
-                + player_name + ' <span id="ready-state">Waiting</span></div>');
             if (player_id != network_player.id) {
                 setupPlayer1(network_player.id, player_id);
             }
         };
-        network_callbacks.game_room_update_leave = function(player_id) {
-            $('#room-players #' + player_id).remove();
-        };
-        network_callbacks.game_room_update_ready = function(player_id) {
-            $('#room-players #' + player_id + ' #ready-state').text('Ready');
-        };
         // game data events
         network_callbacks.game_will_start = function() {
-            gameState.state = STATES['WAITING'];
-            console.log('Game state ' + STATES[gameState.state]);
+            console.log('Waiting to sync players');
             playerNumber = network_player.number;
-            $('#log').append("You ("+network_player.name+") are player "+playerNumber);
-            game_init();
+            console.log("You ("+network_player.name+") are player "+playerNumber);
         };
         network_callbacks.game_did_start = function() {
-            gameState.state = STATES['RUNNING'];
-            console.log('Game state ' + STATES[gameState.state]);
+            console.log('Game loaded and players synced');
         };
         network_callbacks.game_move_event = function(movement, rotation) {
-            gameState.movement = movement;
-            gameState.rotation = rotation;
             moveTank(movement, rotation);
-            // console.log('Game state', gameState)
         };
         network_callbacks.game_move_turret = function(angle) {
             moveTurret(angle);
@@ -97,45 +52,16 @@
             turretFire();
         };
         $(document).ready(function(){
-            // handlers for the different forms in the page
-            // $('form#settings').submit(function(event) {
-            //     var name = $('#settings_name').val();
-            //     network_player.setName(name);
-            //     return false;
-            // });
-            // $('form#join').submit(function(event) {
-            //     network_handlers.game_room_join();
-            //     return false;
-            // });
-            // $('form#ready').submit(function(event) {
-            //     network_handlers.game_room_ready();
-            //     return false;
-            // });
-            // // control events
-            // $('form#pull-left').submit(function(event) {
-            //     var value = parseInt($('#control_lever_left').val());
-            //     network_handlers.control_lever_left(value);
-            //     return false;
-            // });
-            // $('form#pull-right').submit(function(event) {
-            //     var value = parseInt($('#control_lever_right').val());
-            //     network_handlers.control_lever_right(value);
-            //     return false;
-            // });
             // init socket connection
             network_register_main();
         });
-
         function setupPlayer1(myID, otherPlayerID) {
             if (myID.localeCompare(otherPlayerID)) {
-                $('#log').append('<br>myID [' + myID + '] is P1');
                 network_player.number = 1;
             } else {
-                $('#log').append('<br>otherPlayerID [' + otherPlayerID + '] is P1');
                 network_player.number = 2;
             }
         }
-
         function refreshPlayerNumber (players) {
             if (players != undefined) {
                 var player1 = undefined;
@@ -157,46 +83,14 @@
                 if (player1 != network_player) {
                     network_player.number = 2;
                 }
-                $('#log').append('<br>Player 1:  ['+player1.id+'] ['+player1.name+']');
             }
         }
     </script>
 </head>
 <body>
-    <!-- <h1>AINOTA TANKS</h1>
-
-
-    <h2>Main</h2>
-    <span>Player: <span id="player"></span></span>
-    <form id="settings" method="POST" action='#'>
-        <input type="text" name="settings_name" id="settings_name" placeholder="Username">
-        <input type="submit" value="Update">
-    </form>
-    <form id="join" method="POST" action='#'>
-        <input type="submit" value="Join Room">
-    </form>
-
-
-    <h2>Room</h2>
-    <h3>Players:</h3>
-    <div id="room-players"></div>
-    <form id="ready" method="POST" action='#'>
-        <input type="submit" value="Ready">
-    </form>
-
-    <h2>Controls</h2>
-    <form id="pull-left" method="POST" action='#'>
-        <input type="text" name="control_lever_left" id="control_lever_left" placeholder="Value">
-        <input type="submit" value="Left Lever">
-    </form>
-    <form id="pull-right" method="POST" action='#'>
-        <input type="text" name="control_lever_right" id="control_lever_right" placeholder="Value">
-        <input type="submit" value="Right Lever">
-    </form>
-
-    <h2>Receive:</h2>
-    <div id="log"></div>
-
-    <div id="game" style="display:hidden"></div> -->
+    <div id="game"></div>
 </body>
 </html>
+
+
+
