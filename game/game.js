@@ -110,15 +110,17 @@ Game.prototype.update = function() {
     this.lever.update();
     this.tank.update();
     this.enemy.update();
-    if (this.enemy.health <= 0 && this.hasAlert()) {
-        this.missionCompleted();
-    } else if (this.tank.numberOfBullets <= 0 && this.hasAlert()) {
-        this.missionFailed();
+    if (!this.hasAlert()) {
+        if (this.enemy.health <= 0) {
+            this.missionCompleted();
+        } else if (this.tank.numberOfBullets <= 0) {
+            this.missionFailed();
+        }
     }
 }
 
 Game.prototype.hasAlert = function() {
-    return this.missionFailureAlert != undefined || this.missionCompletedAlert == undefined;
+    return this.missionFailedAlert != undefined || this.missionCompletedAlert != undefined;
 }
 
 Game.prototype.render = function() {
@@ -144,6 +146,7 @@ Game.prototype.turretFire = function() {
 
 Game.prototype.missionCompleted = function() {
     this.missionCompletedAlert = this.game.add.image(360, 190, 'missionCompleted');
+    this.missionCompletedAlert.fixedToCamera = true;
 
     sound = game.add.audio('victoryExplosion');
     sound.play();
@@ -151,4 +154,5 @@ Game.prototype.missionCompleted = function() {
 
 Game.prototype.missionFailed = function() {
     this.missionFailedAlert = this.game.add.image(400, 218, 'missionFailure');
+    this.missionFailedAlert.fixedToCamera = true;
 }
