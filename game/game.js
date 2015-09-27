@@ -7,6 +7,7 @@ var tank;
 var enemy;
 var DEBUG;
 var playerNumber;
+var bulletsIndicator;
 
 function game_init(player) {
     if (DEBUG == undefined) {
@@ -23,6 +24,7 @@ function preload() {
     map = new Map(game);
     tank = new Tank(game);
     enemy = new EnemyTank(game, tank);
+    game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
     if (playerNumber == 1) {
         lever = new Lever(game, 1000, 305, 107, 294, 'right');
         game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
@@ -45,6 +47,7 @@ function create() {
     enemy.create(map.blockedLayer);
     interfacePlayer = game.add.image(0, 0, 'interfacePlayer');
     interfacePlayer.fixedToCamera = true;
+
     if (playerNumber == 1) {
         fireButton = game.add.button(38, 351, 'fireButton', tank.fire, tank, 2, 1, 0);
         fireButton.fixedToCamera = true;
@@ -53,6 +56,26 @@ function create() {
         crank.crank.fixedToCamera = true;
     }
     lever.create();
+
+    createNumberOfBulletsIndicator();
+    tank.fireCallback = function () {
+        updateNumberOfBulletsIndicator();
+    };
+}
+
+function createNumberOfBulletsIndicator() {
+    bulletsIndicator = [];
+    for (var i = 0; i < this.tank.numberOfBullets; i++) {
+        bulletIndicator = this.game.add.image(25 + (54 * i), 15, 'bulletIndicator');
+        bulletIndicator.fixedToCamera = true;
+        bulletsIndicator[i] = bulletIndicator;
+    };
+}
+
+function updateNumberOfBulletsIndicator() {
+    for (var i = 0; i < 5; i++) {
+        bulletsIndicator[i].visible = (i < tank.numberOfBullets);
+    }
 }
 
 function update() {

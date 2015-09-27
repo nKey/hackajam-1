@@ -14,6 +14,8 @@ var blockedLayer;
 var tankAngle = 0;
 var turretAngle;
 
+var fireCallback;
+
 function Tank(game) {
     this.game = game;
 
@@ -22,6 +24,7 @@ function Tank(game) {
     this.nextFire = 0;
     this.tankAngle = 0;
     this.turretAngle = 0;
+    this.numberOfBullets = 5;
 }
 
 Tank.prototype.preload = function() {
@@ -116,15 +119,19 @@ Tank.prototype.update = function () {
 }
 
 Tank.prototype.fire = function () {
-    if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0) {
+    if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 && this.numberOfBullets > 0) {
+        this.numberOfBullets--;
         this.nextFire = this.game.time.now + this.fireReloadDelay;
         var bullet = this.bullets.getFirstExists(false);
         bullet.reset(this.turret.x, this.turret.y);
         bullet.rotation = this.turret.rotation;
         bullet.body.velocity = this.game.physics.arcade.velocityFromAngle(bullet.angle, 300);
+        this.turret.bringToTop();
 
         sound = game.add.audio('tankFireSound');
         sound.play();
+
+        this.fireCallback();
     }
 }
 
