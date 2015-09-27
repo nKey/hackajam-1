@@ -57,7 +57,7 @@ Game.prototype.create = function() {
     this.interfacePlayer = this.game.add.image(0, 0, 'interfacePlayer');
     this.interfacePlayer.fixedToCamera = true;
     if (this.playerNumber == 1) {
-        this.fireButton = this.game.add.button(38, 351, 'fireButton', network_handlers.action_fire, this.tank, 2, 1, 0);
+        this.fireButton = this.game.add.button(38, 351, 'fireButton', network_handlers.action_fire, network_handlers, 2, 1, 0);
         this.fireButton.fixedToCamera = true;
         this.createSmileLeft();
     } else {

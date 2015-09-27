@@ -38,6 +38,7 @@ var network_handlers = {
     game_room_ready: function() {},
     control_lever_left: function(value) {},
     control_lever_right: function(value) {},
+    action_fire: function() {},
 };
 
 
@@ -142,7 +143,7 @@ function network_register_game(state) {
     network_handlers.control_turret = function(value) {
         socket.emit('control-turret', value);
     };
-    network_handlers.action_fire = function(value) {
+    network_handlers.action_fire = function() {
         socket.emit('action-fire');
     };
 }

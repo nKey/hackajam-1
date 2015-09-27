@@ -16,6 +16,8 @@ var turretAngle;
 
 var fireCallback;
 var bulletsIndicator;
+var smile;
+var smileChanged;
 
 function Tank(game) {
     this.game = game;
@@ -167,7 +169,7 @@ Tank.prototype.fireCallback = function () {
     }
     
     this.hideSmileAndShowSmileChanged();
-    setTimeout(this.hideSmileChangedAndShowSmile, 1000);
+    setTimeout(this.hideSmileChangedAndShowSmile, 1000, this.smile, this.smileChanged);
 }
 
 Tank.prototype.insertBulletIndicator = function(bulletsIndicator, smile, smileChanged) {
@@ -181,7 +183,7 @@ Tank.prototype.hideSmileAndShowSmileChanged = function() {
     this.smileChanged.visible = true;
 }
 
-Tank.prototype.hideSmileChangedAndShowSmile = function() {
-    this.smile.visible = true;
-    this.smileChanged.visible = false;
+Tank.prototype.hideSmileChangedAndShowSmile = function(smile, smileChanged) {
+    smile.visible = true;
+    smileChanged.visible = false;
 }

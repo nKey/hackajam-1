@@ -21,3 +21,7 @@ function moveTank(movement, rotation){
 function moveTurret(angle){
     game.state.states[game.state.current].moveTurret(angle);
 }
+
+function turretFire(){
+    game.state.states[game.state.current].turretFire();
+}

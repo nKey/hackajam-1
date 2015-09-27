@@ -66,6 +66,7 @@ Nickname.prototype.lobby = function() {
     } else {
         network_player.setName(this.myInput.canvasInput._value);
     }
+    network_handlers.game_room_join();
     game.state.start('Lobby');
 }
 
