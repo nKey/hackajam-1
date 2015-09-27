@@ -4,29 +4,29 @@ function Nickname(){
 var myInput;
 
 Nickname.prototype.preload = function() {
-    game.load.image('menu', 'game/assets/menu_background.png');
-    game.load.image('button', 'game/assets/tank_button.png');
+    game.load.image('background', 'game/assets/nickname_screen.png');
+    game.load.image('ok_button', 'game/assets/button_ok.png');
+    game.load.image('cancel_button', 'game/assets/button_cancel.png');
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
 }
 
 Nickname.prototype.create = function () {
-    game.add.sprite(0, 0, 'menu');
+    game.add.sprite(0, 0, 'background');
     
-    
-    this.myInput = this.createInput(this.game.world.centerX + 30, this.game.world.centerY + 100);
+    this.myInput = this.createInput(this.game.world.centerX, this.game.world.centerY + 100);
     this.myInput.anchor.set(0.5);
     this.myInput.canvasInput.value('');
     
-    var buttonCache = game.cache.getImage('button');
-    var button = this.add.button(game.world.centerX + 45 - (buttonCache.width/2), 
-                                     game.world.height - 200, 'button',  this.lobby, this);
+    var buttonCache = game.cache.getImage('cancel_button');
+    var button = this.add.button(game.world.centerX - buttonCache.width - 10, 
+                                     game.world.height - 180, 'cancel_button',  this.back, this);
 
 
-    var buttonCache = game.cache.getImage('button');
-    var button = this.add.button(game.world.centerX + 45 - (buttonCache.width/2), 
-                                     game.world.height - 120, 'button',  this.quit, this);
+    var buttonCache = game.cache.getImage('ok_button');
+    var button = this.add.button(game.world.centerX + 10, 
+                                     game.world.height - 180, 'ok_button',  this.lobby, this);
 
      
 }
@@ -39,13 +39,12 @@ Nickname.prototype.createInput = function(x, y) {
         canvas: bmd.canvas,
         fontSize: 30,
         fontFamily: 'Arial',
-        fontColor: '#212121',
+        fontColor: '#4F4843',
         fontWeight: 'bold',
         width: 400,
         padding: 8,
-        borderWidth: 1,
-        borderColor: '#000',
-        backgroundColor: '#000',
+        borderWidth: 0,
+        backgroundColor: '#C6BAA3',
         boxShadow: '1px 1px 0px #fff',
         innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
         placeHolder: ''
@@ -62,10 +61,14 @@ Nickname.prototype.inputFocus = function(sprite) {
 }
 
 Nickname.prototype.lobby = function() {
-    network_player.setName(this.myInput.canvasInput._value);
+    if (this.myInput.canvasInput._value == "") {
+        network_player.setName("untitled");
+    } else {
+        network_player.setName(this.myInput.canvasInput._value);
+    }
     game.state.start('Lobby');
 }
 
-Nickname.prototype.quit = function() {
-    game.state.start('Welcome');
+Nickname.prototype.back = function() {
+    game.state.start('Menu');
 }
