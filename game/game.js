@@ -19,11 +19,11 @@ function preload() {
     map = new Map(game);
     tank = new Tank(game);
     if(playerNumber == 1){
-        lever = new Lever(game, 1000, 305, 107, 294)
+        lever = new Lever(game, 1000, 305, 107, 294, 'right');
         game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
         game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_2_background.png');
     }else{
-        lever = new Lever(game, 100, 305, 107, 294)
+        lever = new Lever(game, 100, 305, 107, 294, 'left');
         crank = new Crank(game, 1000, 450, 300);
         game.load.spritesheet('interfacePlayer', 'game/assets/interface_player_1_background.png');
         crank.preload();
@@ -53,9 +53,7 @@ function update() {
     map.update();
     if(playerNumber == 2){
         crank.update();
-        tank.turretAngle = crank.angle;
     }
-    // console.log(crank.getAngle());
     lever.update();
     tank.update();
 
@@ -70,6 +68,11 @@ function render() {
 }
 
 function moveTank(movement, rotation){
-    tank.currentSpeed = movement * 10;
-    tank.tankAngle = rotation/10;
+    tank.currentSpeed = movement * 50;
+    tank.tankAngle = rotation/3;
 } 
+
+function moveTurret(angle) {
+    tank.turretAngle = angle;
+
+}

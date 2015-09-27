@@ -6,13 +6,16 @@ var y;
 var width;
 var height;
 var leverSprite;
+var leverVelocity;
+var direction;
 
-function Lever(game, x, y, width, height) {
+function Lever(game, x, y, width, height, direction) {
     this.game = game;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.direction = direction;
 }
 
 Lever.prototype.preload = function() {
@@ -43,6 +46,12 @@ Lever.prototype.update = function() {
 
             normalizedLeverValue = (this.leverTrigger.y - this.leverArea.y) / (this.leverArea.height - this.leverTrigger.height);
             this.leverSprite.animations.frame = Math.ceil(normalizedLeverValue * this.leverSprite.animations.frameTotal) - 1;
+            if(this.direction == 'left'){
+                network_handlers.control_lever_left(this.leverSprite.animations.frame);
+            }else if(this.direction == 'right'){
+                network_handlers.control_lever_right(this.leverSprite.animations.frame);
+            }
+            
         }
     }
 }

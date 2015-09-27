@@ -29,6 +29,7 @@ STATE = {
     'map_id': 0,
     'event_clock': 0,
     'movement_components': [0, 0],
+    'turret_angle_component': 0,
 }
 
 GLOBAL = {
@@ -145,6 +146,15 @@ def event_control_left(value):
 def event_control_right(value):
     STATE['movement_components'][1] = value
     event_notify_movement()
+
+@socketio.on('control-turret', namespace='/game')
+def event_control_right(value):
+    STATE['turret_angle_component'] = value
+    game_id = STATE['game_id']
+    STATE['event_clock'] += 1
+    emit('turret-movement', {'angle': value, 'clock': STATE['event_clock']},
+        room=game_id, broadcast=True)
+    
 
 
 def event_notify_movement():

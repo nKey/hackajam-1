@@ -46,6 +46,7 @@ Crank.prototype.update = function() {
             this.buttonCircle.y = this.outCircle.y + (this.outCircle.radius - this.buttonCircle.radius) * Math.sin(angleRadius);
             this.crank.angle = angleRadius * (180 / Math.PI); 
             this.angle = angleRadius;
+            network_handlers.control_turret(angleRadius);
         }
     }
 }

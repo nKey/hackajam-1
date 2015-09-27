@@ -5,6 +5,8 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.17/socket.io.js"></script>
 
+    <script type="text/javascript" src="game/network.js"></script>
+
     <script type="text/javascript" src="game/phaser.js"></script>
     <script type="text/javascript" src="game/map.js"></script>
     <script type="text/javascript" src="game/tank.js"></script>
@@ -12,7 +14,6 @@
     <script type="text/javascript" src="game/lever.js"></script>
     <script type="text/javascript" src="game/game.js"></script>
 
-    <script type="text/javascript" src="game/network.js"></script>
     <script type="text/javascript" charset="utf-8">
         // game data
         var STATES = {
@@ -71,7 +72,11 @@
         network_callbacks.game_move_event = function(movement, rotation) {
             gameState.movement = movement;
             gameState.rotation = rotation;
-            console.log('Game state', gameState)
+            moveTank(movement, rotation);
+            // console.log('Game state', gameState)
+        };
+        network_callbacks.game_move_turret = function(angle) {
+            moveTurret(angle);
         };
         $(document).ready(function(){
             // handlers for the different forms in the page
