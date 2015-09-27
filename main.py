@@ -147,6 +147,7 @@ def event_control_right(value):
     STATE['movement_components'][1] = value
     event_notify_movement()
 
+
 @socketio.on('control-turret', namespace='/game')
 def event_control_turret(value):
     STATE['turret_angle_component'] = value
@@ -155,11 +156,21 @@ def event_control_turret(value):
     emit('turret-movement', {'angle': value, 'clock': STATE['event_clock']},
         room=game_id, broadcast=True)
 
+
 @socketio.on('action-fire', namespace='/game')
 def event_action_fire():
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
     emit('action-fire', {'clock': STATE['event_clock']}, room=game_id, broadcast=True)
+
+
+@socketio.on('dead-reckoning', namespace='/game')
+def event_notify_position(data):
+    game_id = STATE['game_id']
+    STATE['event_clock'] += 1
+    emit('event-position', {'x': data.x, 'y': data.y, 'angle': data.angle, 'clock': STATE['event_clock']},
+        room=game_id)
+
 
 def event_notify_movement():
     game_id = STATE['game_id']
