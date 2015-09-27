@@ -54,6 +54,7 @@ def main_connect():
     player_id = uuid.uuid4().hex
     session['player_id'] = player_id
     join_room(player_id)
+    emit('player', {'player_id': player_id}, room=player_id)
     emit('global', GLOBAL, room=player_id)
 
 
