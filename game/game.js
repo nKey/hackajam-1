@@ -25,6 +25,7 @@ function preload() {
     tank = new Tank(game);
     enemy = new EnemyTank(game, tank);
     game.load.spritesheet('bulletIndicator', 'game/assets/bullet_indicator.png');
+    game.load.audio('gameMusic', ['game/assets/sound/game_music.mp3']);
     if (playerNumber == 1) {
         lever = new Lever(game, 1000, 305, 107, 294, 'right');
         game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
@@ -61,6 +62,9 @@ function create() {
     tank.fireCallback = function () {
         updateNumberOfBulletsIndicator();
     };
+
+    musicPlayer = game.add.audio('gameMusic', 0.2, false);
+    musicPlayer.play('', 0, 0.2, false);
 }
 
 function createNumberOfBulletsIndicator() {
