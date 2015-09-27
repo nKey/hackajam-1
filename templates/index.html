@@ -92,6 +92,9 @@
         network_callbacks.game_move_turret = function(angle) {
             moveTurret(angle);
         };
+        network_callbacks.game_fire = function() {
+            turretFire();
+        };
         $(document).ready(function(){
             // handlers for the different forms in the page
             // $('form#settings').submit(function(event) {

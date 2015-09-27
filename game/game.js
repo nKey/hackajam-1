@@ -109,3 +109,7 @@ Game.prototype.moveTank = function(movement, rotation) {
 Game.prototype.moveTurret = function(angle) {
     this.tank.turretAngle = angle;
 }
+
+Game.prototype.turretFire = function() {
+    this.tank.fire();
+}
