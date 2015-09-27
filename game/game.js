@@ -4,10 +4,14 @@ var lever;
 var crank;
 var map;
 var tank;
-var DEBUG = false;
+var enemy;
+var DEBUG;
 var playerNumber;
 
 function game_init(player) {
+    if (DEBUG == undefined) {
+        DEBUG = false;
+    }
     if (player == undefined) {
         playerNumber = 1;
     }
@@ -18,6 +22,7 @@ function game_init(player) {
 function preload() {
     map = new Map(game);
     tank = new Tank(game);
+    enemy = new EnemyTank(game, tank);
     if (playerNumber == 1) {
         lever = new Lever(game, 1000, 305, 107, 294, 'right');
         game.load.spritesheet('fireButton', 'game/assets/fire_button.png');
@@ -30,13 +35,14 @@ function preload() {
     }
     map.preload();
     tank.preload();
-    
+    enemy.preload();
     lever.preload();
 }
 
 function create() {
     map.create();
     tank.create(map.blockedLayer);
+    enemy.create(map.blockedLayer);
     interfacePlayer = game.add.image(0, 0, 'interfacePlayer');
     interfacePlayer.fixedToCamera = true;
     if (playerNumber == 1) {
@@ -56,6 +62,7 @@ function update() {
     }
     lever.update();
     tank.update();
+    enemy.update();
 
 }
 

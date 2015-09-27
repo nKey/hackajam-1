@@ -57,8 +57,4 @@ Lever.prototype.update = function() {
 }
 
 Lever.prototype.render = function() {
-    if (DEBUG) {
-       this.game.debug.geom(this.leverArea, "#555555");
-       this.game.debug.geom(this.leverTrigger, "#00DDDD");
-   }
 }

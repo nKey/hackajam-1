@@ -8,7 +8,6 @@ var explosions;
 var currentSpeed = 0;
 
 var nextFire = 0;
-//map
 var blockedLayer;
 
 // Moviment controls
@@ -27,10 +26,9 @@ function Tank(game) {
 
 Tank.prototype.preload = function() {
     this.game.load.atlas('tank', 'game/assets/tank.png', 'game/assets/tank.json');
-    // this.game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tank.json');
     this.game.load.image('bullet', 'game/assets/bullet.png');
-    game.load.spritesheet('kaboom', 'game/assets/explosion.png', 64, 64, 23);
-    game.load.audio('tankFireSound', ['game/assets/sound/tank_fire.ogg']);
+    this.game.load.spritesheet('kaboom', 'game/assets/explosion.png', 64, 64, 23);
+    this.game.load.audio('tankFireSound', ['game/assets/sound/tank_fire.ogg']);
 }
 
 Tank.prototype.create = function(blockedLayer){
@@ -58,7 +56,9 @@ Tank.prototype.create = function(blockedLayer){
     this.game.camera.follow(this.tank);
     this.game.camera.deadzone = new Phaser.Circle(this.game.width/2, this.game.height/2, 60, 60);
 
-    this.cursors = this.game.input.keyboard.createCursorKeys();
+    if (DEBUG) {
+        this.createDebugControls();
+    }
 }
 
 Tank.prototype.setupTank = function() {
@@ -104,11 +104,15 @@ Tank.prototype.update = function () {
 
     this.turret.x = this.tank.x;
     this.turret.y = this.tank.y;
-    
+
     if (this.turretAngle == undefined) {
         this.turretAngle = 0;
     }
     this.turret.rotation = this.tank.rotation + this.turretAngle;
+
+    if (DEBUG) {
+        this.updateDebugControls();
+    }
 }
 
 Tank.prototype.fire = function () {
@@ -121,5 +125,30 @@ Tank.prototype.fire = function () {
 
         sound = game.add.audio('tankFireSound');
         sound.play();
+    }
+}
+
+Tank.prototype.createDebugControls = function () {
+   this.cursors = this.game.input.keyboard.createCursorKeys();
+}
+
+Tank.prototype.updateDebugControls = function () {
+    if (this.cursors.left.isDown) {
+        this.tank.angle -= 4;
+    } else if (this.cursors.right.isDown) {
+        this.tank.angle += 4;
+    }
+
+    if (this.cursors.up.isDown) {
+        //  The speed we'll travel at
+        currentSpeed = 200;
+    } else {
+        if (currentSpeed > 0) {
+            currentSpeed -= 4;
+        }
+    }
+
+    if (currentSpeed > 0) {
+        this.game.physics.arcade.velocityFromRotation(this.tank.rotation, currentSpeed, this.tank.body.velocity);
     }
 }
