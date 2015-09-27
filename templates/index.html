@@ -11,38 +11,8 @@
     <script type="text/javascript" src="game/crank.js"></script>
     <script type="text/javascript" src="game/game.js"></script>
 
+    <script type="text/javascript" src="game/network.js"></script>
     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-            namespace = '/main';
-            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
-            // receive handler for global data
-            socket.on('global', function(global) {
-                $('#log').append('<br>Received # global players count:' + global.players_count);
-            });
-            // receive handler for player data
-            socket.on('settings', function(settings) {
-                $('#player').text(settings.name);
-            });
-            // handlers for the different forms in the page
-            $('form#settings').submit(function(event) {
-                socket.emit('settings', {name: $('#settings_name').val()});
-                return false;
-            });
-            $('form#join').submit(function(event) {
-                socket.emit('join');
-                return false;
-            });
-            // receive handler for game state data
-            socket.on('state', function(state) {
-                $('#log').append('<br>Received # state for game id:' + state.game_id);
-                console.log(state);
-                onGameJoin(state);
-            });
-            // receive handler for error messages
-            socket.on('error', function(error) {
-                alert(error.message);
-            });
-        });
         // game data
         var STATES = {
             'WAITING': 0,
@@ -51,75 +21,86 @@
             1: 'RUNNING',
         };
         var gameState = {
-            'clock': 0,
             'state': 0,
             'movement': 0,
             'rotation': 0,
         };
-        var onGameJoin = function(state) {
+        // respond to network events
+        network_callbacks.global_player_update = function(player) {
+            $('#player').text(player.name);
+        };
+        network_callbacks.global_players_count = function(count) {
+            $('#log').append('<br>Received # global players count:' + count);
+        };
+        network_callbacks.game_room_will_join = function(game_id, state) {
+            $('#log').append('<br>Received # state for game id:' + game_id);
+            console.log(state);
+        };
+        network_callbacks.game_room_did_join = function(game_id, players) {
             // init room state
             $('#room-players').empty();
-            $.each(state.players, function(player_id, player){
+            $.each(players, function(player_id, player){
                 $('#room-players').append(
                     '<div id="' + player_id + '">'
                     + player.name + ' <span id="ready-state">'
                     + (player.ready ? 'Ready' : 'Waiting') + '</span></div>');
             });
-            // listen room events
-            namespace = '/game';
-            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
-            socket.on('join', function(join) {
-                $('#room-players #' + join.player_id).remove();
-                $('#room-players').append('<div id="' + join.player_id + '">' + join.player_name + ' <span id="ready-state">Waiting</span></div>');
-            });
-            socket.on('leave', function(leave) {
-                $('#room-players #' + leave.player_id).remove();
-            })
-            socket.on('ready', function(ready) {
-                $('#room-players #' + ready.player_id + ' #ready-state').text('Ready');
-            });
-            $('form#ready').submit(function(event) {
-                socket.emit('ready');
+        };
+        network_callbacks.game_room_update_join = function(player_id, player_name) {
+            $('#room-players #' + player_id).remove();
+            $('#room-players').append('<div id="' + player_id + '">'
+                + player_name + ' <span id="ready-state">Waiting</span></div>');
+        };
+        network_callbacks.game_room_update_leave = function(player_id) {
+            $('#room-players #' + player_id).remove();
+        };
+        network_callbacks.game_room_update_ready = function(player_id) {
+            $('#room-players #' + player_id + ' #ready-state').text('Ready');
+        };
+        // game data events
+        network_callbacks.game_will_start = function() {
+            gameState.state = STATES['WAITING'];
+            console.log('Game state ' + STATES[gameState.state]);
+            game_init();
+        };
+        network_callbacks.game_did_start = function() {
+            gameState.state = STATES['RUNNING'];
+            console.log('Game state ' + STATES[gameState.state]);
+        };
+        network_callbacks.game_move_event = function(movement, rotation) {
+            gameState.movement = movement;
+            gameState.rotation = rotation;
+            console.log('Game state', gameState)
+        };
+        $(document).ready(function(){
+            // handlers for the different forms in the page
+            $('form#settings').submit(function(event) {
+                var name = $('#settings_name').val();
+                network_player.setName(name);
                 return false;
             });
-            socket.on('event-game-start', function(data) {
-                gameState.clock = data.clock;
-                gameState.state = STATES['WAITING'];
-                socket.emit('event-game-start-ack');
-                game_init();
+            $('form#join').submit(function(event) {
+                network_handlers.game_room_join();
+                return false;
             });
-            socket.on('event-clock-sync', function(data) {
-                gameState.clock = data.clock;
-                if (gameState.clock < data.wait) {
-                    gameState.state = STATES['WAITING'];
-                } else {
-                    gameState.state = STATES['RUNNING'];
-                }
-                console.log('Game state ' + STATES[gameState.state]);
+            $('form#ready').submit(function(event) {
+                network_handlers.game_room_ready();
+                return false;
             });
             // control events
             $('form#pull-left').submit(function(event) {
                 var value = parseInt($('#control_lever_left').val());
-                if (value != 0) {
-                    socket.emit('control-left', value);
-                }
+                network_handlers.control_lever_left(value);
                 return false;
             });
             $('form#pull-right').submit(function(event) {
                 var value = parseInt($('#control_lever_right').val());
-                if (value != 0) {
-                    socket.emit('control-right', value);
-                }
+                network_handlers.control_lever_right(value);
                 return false;
             });
-            // movement events
-            socket.on('event-movement', function(data) {
-                gameState.movement = data.x;
-                gameState.rotation = data.r;
-                gameState.clock = data.clock;
-                console.log('Game state', gameState)
-            });
-        };
+            // init socket connection
+            network_register_main();
+        });
     </script>
 </head>
 <body>

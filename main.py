@@ -54,8 +54,8 @@ def main_connect():
     player_id = uuid.uuid4().hex
     session['player_id'] = player_id
     join_room(player_id)
-    emit('player', {'player_id': player_id}, room=player_id)
-    emit('global', GLOBAL, room=player_id)
+    emit('player', {'player_id': player_id}, room=player_id, broadcast=True)
+    emit('global', GLOBAL, room=player_id, broadcast=True)
 
 
 @socketio.on('join', namespace='/main')
@@ -112,8 +112,7 @@ def state_ready():
         # start new game
         print('All players ready to start game')
         state_init()
-        emit('event-game-start', {'clock': 0, 'ack': game_id},
-            room=game_id, broadcast=True)
+        emit('event-game-start', {'clock': 0}, room=game_id, broadcast=True)
 
 
 @socketio.on('event-game-start-ack', namespace='/game')
@@ -131,7 +130,7 @@ def state_disconnect():
     print('Client [%s] disconnected from game [%s]' % (player_id, game_id))
     emit('leave', {'player_id': player_id}, room=game_id, broadcast=True)
     state_clear_player(player_id)
-    #emit('state', STATE, room=game_id, broadcast=True)
+    emit('state', STATE, room=game_id, broadcast=True)
 
 
 # game events
