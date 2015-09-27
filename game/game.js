@@ -12,7 +12,7 @@ function game_init(player) {
     if (DEBUG == undefined) {
         DEBUG = false;
     }
-    if (player == undefined) {
+    if (playerNumber == undefined) {
         playerNumber = 1;
     }
     game = new Phaser.Game(1200, 600, Phaser.AUTO, 'game', {

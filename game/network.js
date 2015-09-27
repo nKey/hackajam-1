@@ -6,6 +6,7 @@ function NetworkPlayer(socket, player_id) {
     this.socket = socket;
     this.id = player_id;
     this.name = '';
+    this.number = undefined;
 }
 
 NetworkPlayer.prototype.setName = function(name) {
