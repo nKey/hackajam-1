@@ -36,14 +36,18 @@ Lobby.prototype.create = function () {
     this.add.button(game.width - 480, game.height - 92, 'ready_button', this.gameStart, this);
 }
 
+var player1Text;
 function showPlayer1 (name) {
-    var bmpText = game.add.bitmapText(0, 200, 'roboto', name, 20);
-    bmpText.x = 234 - (bmpText.width/2);
+    game.world.remove(player1Text);
+    player1Text = game.add.bitmapText(0, 200, 'roboto', name, 20);
+    player1Text.x = 234 - (player1Text.width/2);
 }
 
+var player2Text;
 function showPlayer2 (name) {
-    var bmpText = game.add.bitmapText(0, 200, 'roboto', name, 20);
-    bmpText.x = 654 - (bmpText.width/2);
+    game.world.remove(player2Text);
+    player2Text = game.add.bitmapText(0, 200, 'roboto', name, 20);
+    player2Text.x = 654 - (player2Text.width/2);
 }
 
 Lobby.prototype.gameStart = function () {
@@ -64,6 +68,13 @@ network_callbacks.game_room_update_join = function(player_id, player_name) {
     }
     if (player_id != network_player.id) {
         setupPlayer1(network_player.id, player_id);
+    }
+};
+network_callbacks.game_room_update_leave = function(player_id) {
+    if (player_id === 1) {
+        showPlayer1("");
+    } else {
+        showPlayer2("");
     }
 };
 
