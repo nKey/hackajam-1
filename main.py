@@ -113,14 +113,14 @@ def state_ready():
         # start new game
         print('All players ready to start game')
         state_init()
-        emit('event-game-start', {'clock': 0}, room=game_id, broadcast=True)
+        emit('event_game_start', {'clock': 0}, room=game_id, broadcast=True)
 
 
-@socketio.on('event-game-start-ack', namespace='/game')
+@socketio.on('event_game_start_ack', namespace='/game')
 def event_game_start_ack():
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
-    emit('event-clock-sync', {'clock': STATE['event_clock'], 'wait': 2},
+    emit('event_clock_sync', {'clock': STATE['event_clock'], 'wait': 2},
         room=game_id, broadcast=True)
 
 
@@ -136,36 +136,36 @@ def state_disconnect():
 
 # game events
 
-@socketio.on('control-left', namespace='/game')
+@socketio.on('control_left', namespace='/game')
 def event_control_left(value):
     STATE['movement_components'][0] = value
     event_notify_movement()
 
 
-@socketio.on('control-right', namespace='/game')
+@socketio.on('control_right', namespace='/game')
 def event_control_right(value):
     STATE['movement_components'][1] = value
     event_notify_movement()
 
 
-@socketio.on('control-turret', namespace='/game')
+@socketio.on('control_turret', namespace='/game')
 def event_control_turret(value):
     STATE['turret_angle_component'] = value
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
-    emit('turret-movement', {'angle': value, 'clock': STATE['event_clock']},
+    emit('turret_movement', {'angle': value, 'clock': STATE['event_clock']},
         room=game_id, broadcast=True)
 
 
-@socketio.on('action-fire', namespace='/game')
+@socketio.on('action_fire', namespace='/game')
 def event_action_fire():
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
     # TODO: send turrent angle for bullet sync
-    emit('action-fire', {'clock': STATE['event_clock']}, room=game_id, broadcast=True)
+    emit('action_fire', {'clock': STATE['event_clock']}, room=game_id, broadcast=True)
 
 
-@socketio.on('dead-reckoning', namespace='/game')
+@socketio.on('dead_reckoning', namespace='/game')
 def event_notify_position(data):
     game_id = STATE['game_id']
     STATE['event_clock'] += 1
@@ -177,7 +177,7 @@ def event_notify_position(data):
         'clock': STATE['event_clock'],
     }
     data = {k: v for k, v in data.iteritems() if v is not None}
-    emit('event-position', data, room=game_id)
+    emit('event_position', data, room=game_id)
 
 
 def event_notify_movement():
@@ -186,7 +186,7 @@ def event_notify_movement():
     x = (left / 2.0) + (right / 2.0)
     r = (right / 2.0) - (left / 2.0)
     STATE['event_clock'] += 1
-    emit('event-movement', {'x': x, 'r': r, 'clock': STATE['event_clock']},
+    emit('event_movement', {'x': x, 'r': r, 'clock': STATE['event_clock']},
         room=game_id, broadcast=True)
 
 

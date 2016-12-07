@@ -101,12 +101,12 @@ function network_register_game(state) {
     socket.on('ready', function(ready) {
         network_callbacks.game_room_update_ready(ready.player_id);
     });
-    socket.on('event-game-start', function(data) {
+    socket.on('event_game_start', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_will_start();
-        socket.emit('event-game-start-ack');
+        socket.emit('event_game_start_ack');
     });
-    socket.on('event-clock-sync', function(data) {
+    socket.on('event_clock_sync', function(data) {
         network_sync.clock = data.clock;
         if (network_sync.clock < data.wait) {
             network_sync.state = NetworkStates['WAITING'];
@@ -116,21 +116,21 @@ function network_register_game(state) {
         }
     });
     // receive handler for movement events
-    socket.on('event-movement', function(data) {
+    socket.on('event_movement', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_move_event(data.x, data.r);
     });
     // receive handler for movement events
-    socket.on('turret-movement', function(data) {
+    socket.on('turret_movement', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_move_turret(data.angle);
     });
     // receive handler for movement events
-    socket.on('action-fire', function(data) {
+    socket.on('action_fire', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_fire();
     });
-    socket.on('event-position', function(data) {
+    socket.on('event_position', function(data) {
         network_sync.clock = data.clock;
         network_callbacks.game_dead_reckoning(data.x, data.y, data.angle);
     });
@@ -139,18 +139,18 @@ function network_register_game(state) {
         socket.emit('ready');
     };
     network_handlers.control_lever_left = function(value) {
-        socket.emit('control-left', value);
+        socket.emit('control_left', value);
     };
     network_handlers.control_lever_right = function(value) {
-        socket.emit('control-right', value);
+        socket.emit('control_right', value);
     };
     network_handlers.control_turret = function(value) {
-        socket.emit('control-turret', value);
+        socket.emit('control_turret', value);
     };
     network_handlers.action_fire = function() {
-        socket.emit('action-fire');
+        socket.emit('action_fire');
     };
     network_handlers.dead_reckoning = function(x, y, angle) {
-        socket.emit('dead-reckoning', {x: x, y: y, angle: angle});
+        socket.emit('dead_reckoning', {x: x, y: y, angle: angle});
     };
 }
