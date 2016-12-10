@@ -38,7 +38,7 @@ function Menu(){
 Menu.prototype.newGame = function () {
     var self = this;
     game.network.createNewGame(game.thisPlayer, function (error) {
-        if (game.session !== null) {
+        if (game.session !== null && game.session !== undefined) {
             alert("Session code: '" + game.session.code + "'. Send it to your friend to join your session!");
             self.state.start('Lobby');
         } else {
@@ -51,8 +51,8 @@ Menu.prototype.joinGame = function () {
     var self = this;
     var gameSessionCode = prompt("Type the session code") || "00001";
     game.network.joinGame(gameSessionCode, game.thisPlayer, function (error) {
-        if (game.session !== null) {
-            console.log("NewGame created with success! begin lobby");
+        if (game.session !== null && game.session !== undefined) {
+            console.log("Joined with success! begin lobby");
             self.state.start('Lobby');
         } else {
             alert(error || "Unable to join game '" + gameSessionCode + "'. Try again later");

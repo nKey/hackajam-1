@@ -1,3 +1,8 @@
+var Network = {
+    sessionPlayersUpdated: function(players) {}
+};
+
+
 function FirebaseNetwork() {
 }
 
@@ -33,6 +38,7 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
             }
         } else {
             game.session.save(function () {
+                game.session.registerSessionPlayerUpdatesListener();
                 console.log("created new GameSession: "+JSON.stringify(game.session));
                 callback();
             });
@@ -42,34 +48,49 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
 
 FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
     firebase.database().ref('games/' + gameCode).once('value', function(snapshot) {
-        game.session = new GameSession(snapshot.val());
-        game.session.players = snapshot.child("players").val();
-        if (game.session !== null) {
-            console.log("Found GameSession: \n"+JSON.stringify(game.session));
+        if (snapshot.val() !== null) {
+            console.log("Found GameSession 1: \n"+JSON.stringify(snapshot.val()));
+            game.session = gameSessionFromData(snapshot.val());
+            // game.session.players = snapshot.child("players").val();
+            console.log("Found GameSession 2: \n"+JSON.stringify(game.session));
             if (game.session.players.length >= 2) {
                 game.session = null;
+                console.log("Maximum number of users (2) is reached in this session. Create a new game.");
                 callback("Maximum number of users (2) is reached in this session. Create a new game.");
             } else {
                 game.session.players.push(player);
+                console.log("Found GameSession 3: \n"+JSON.stringify(game.session));
                 game.session.save(function () {
-                    console.log("joined GameSession: \n" + JSON.stringify(game.session));
+                    game.session.registerSessionPlayerUpdatesListener();
+                    console.log("joined GameSession 4: \n" + JSON.stringify(game.session));
                     callback();
                 });
             }
         } else {
-            callback("Couldn't find GameSession "+gameCode);
+            console.log("Couldn't find GameSession '" + gameCode + "'");
+            callback("Couldn't find GameSession '" + gameCode + "'");
         }
     });
 };
 
-function GameSession(data) {
-    GameSession.extend(this, data);
+function gameSessionFromData(data) {
+    var session = new GameSession();
+    session.code = data["code"];
+    session.players = data["players"];
+    session.dateCreated = data["dateCreated"];
+    return session;
 }
 
 function GameSession() {
-    this.code = this.generateGameCode();
-    this.players = [];
-    this.dateCreated = new Date().toISOString();
+    if (!this.code) {
+        this.code = this.generateGameCode();
+    }
+    if (!this.players) {
+        this.players = [];
+    }
+    if (!this.dateCreated) {
+        this.dateCreated = new Date().toISOString();
+    }
 }
 
 GameSession.prototype.generateGameCode = function() {
@@ -81,4 +102,10 @@ GameSession.prototype.generateGameCode = function() {
 
 GameSession.prototype.save = function (callback) {
     firebase.database().ref('games/' + this.code).set(this).then(callback);
+};
+
+GameSession.prototype.registerSessionPlayerUpdatesListener = function () {
+    firebase.database().ref('games/' + this.code + '/players').on('value', function (playersObj) {
+        Network.sessionPlayersUpdated(playersObj.val());
+    });
 };
