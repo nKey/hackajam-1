@@ -8,3 +8,5 @@ lib/
 local/
 
 pip-selfcheck.json
+
+.idea/
