@@ -1,8 +1,10 @@
 function Lobby() {
 }
 
+var lobby_players;
+
 Lobby.prototype.init = function(players) {
-    this.lobby_players = players;
+    lobby_players = players;
 }
 
 Lobby.prototype.preload = function() {
@@ -19,21 +21,28 @@ Lobby.prototype.preload = function() {
 Lobby.prototype.create = function () {
     game.add.sprite(0, 0, 'menu');
 
-    $.each(this.lobby_players, function(player_id, player) {
-        if (player.number === 1) {
-            showPlayer1(player.name);
-        } else {
-            showPlayer2(player.name);
-        }
-    });
+    populateUI();
 
-    if (network_player.number == 1) {
-        showPlayer1(network_player.name);
-    } else {
-        showPlayer2(network_player.name);
-    }
     this.add.button(22, game.height - 92, 'back_button', this.back, this);
     this.add.button(game.width - 480, game.height - 92, 'ready_button', this.gameStart, this);
+}
+
+function populateUI() {
+    showPlayer1("");
+    showPlayer2("");
+    var i = 1;
+    $.each(lobby_players, function(player_id, player) {
+        if (i == 1) {
+            showPlayer1(player.name);
+            console.log("showPlayer1 "+player.name);
+        } else if (i == 2) {
+            showPlayer2(player.name);
+            console.log("showPlayer2 "+player.name);
+        } else {
+            console.log("Error: should not have more than 2 players: " + JSON.stringify(lobby_players));
+        }
+        i++;
+    });
 }
 
 var player1Text;
@@ -60,22 +69,28 @@ Lobby.prototype.back = function () {
 }
 
 network_callbacks.game_room_update_join = function(player_id, player_name) {
-    var otherPlayerNumber = network_player.number === 1 ? 2 : 1;
+    network_player = new NetworkPlayer(player_id, player_name);
+
+    if (player_id != network_player.id) {
+        setupPlayer1(network_player.id, player_id);
+    }
+
+    var otherPlayerNumber = this_player.number === 1 ? 2 : 1;
     if (otherPlayerNumber === 1) {
         showPlayer1(player_name);
     } else {
         showPlayer2(player_name);
     }
-    if (player_id != network_player.id) {
-        setupPlayer1(network_player.id, player_id);
-    }
 };
-network_callbacks.game_room_update_leave = function(player_id) {
-    if (player_id === 1) {
-        showPlayer1("");
-    } else {
-        showPlayer2("");
-    }
+
+network_callbacks.game_room_update_leave = function(player_id_leave) {
+    $.each(lobby_players, function(player_id, player) {
+        if (player_id === player_id_leave) {
+            delete lobby_players[player_id_leave];
+        }
+    });
+    network_player.name = "";
+    populateUI();
 };
 
 function setupPlayer1(myID, otherPlayerID) {

@@ -7,33 +7,33 @@ Nickname.prototype.preload = function() {
     game.load.image('background', 'game/assets/nickname_screen.png');
     game.load.image('ok_button', 'game/assets/button_ok.png');
     game.load.image('cancel_button', 'game/assets/button_cancel.png');
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
 }
 
 Nickname.prototype.create = function () {
     game.add.sprite(0, 0, 'background');
-    
+
     this.myInput = this.createInput(this.game.world.centerX, this.game.world.centerY + 100);
     this.myInput.anchor.set(0.5);
 
-    this.myInput.canvasInput.value(network_player.name);
-    
+    this.myInput.canvasInput.value(this_player.name);
+
     var buttonCache = game.cache.getImage('cancel_button');
-    var button = this.add.button(game.world.centerX - buttonCache.width - 10, 
+    var button = this.add.button(game.world.centerX - buttonCache.width - 10,
                                      game.world.height - 180, 'cancel_button',  this.back, this);
 
 
     var buttonCache = game.cache.getImage('ok_button');
-    var button = this.add.button(game.world.centerX + 10, 
+    var button = this.add.button(game.world.centerX + 10,
                                      game.world.height - 180, 'ok_button',  this.lobby, this);
 
-     
+
 }
 
 Nickname.prototype.createInput = function(x, y) {
-    var bmd = this.add.bitmapData(350, 110);    
+    var bmd = this.add.bitmapData(350, 110);
     this.myInput = this.game.add.sprite(x, y, bmd);
 
     this.myInput.canvasInput = new CanvasInput({
@@ -63,11 +63,15 @@ Nickname.prototype.inputFocus = function(sprite) {
 
 Nickname.prototype.lobby = function() {
     if (this.myInput.canvasInput._value == "") {
-        network_player.setName("untitled");
+        this_player.setName("untitled");
     } else {
-        network_player.setName(this.myInput.canvasInput._value);
+        this_player.setName(this.myInput.canvasInput._value);
     }
     network_callbacks.game_room_did_join = function (game_id, players) {
+
+        console.log("game_room_did_join, players: "+JSON.stringify(players));
+        this_player.number = Object.keys(players).length;
+        console.log("player number: "+this_player.number);
         refreshPlayerNumber(players);
         var lobby = game.state.start('Lobby', true, false, players);
     };
@@ -92,7 +96,7 @@ function refreshPlayerNumber (players) {
                 }
             }
         });
-        if (player1 != network_player) {
+        if (player1 != network_player && network_player !== undefined) {
             network_player.number = 2;
         }
     }

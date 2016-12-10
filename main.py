@@ -61,6 +61,7 @@ def main_connect():
 
 @socketio.on('join', namespace='/main')
 def main_join():
+    print("main_socket receive join ", session)
     player_id = session['player_id']
     if player_id in STATE['players']:
         emit('error', {'message': 'Already in room'},

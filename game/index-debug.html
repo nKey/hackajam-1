@@ -91,7 +91,7 @@
             // handlers for the different forms in the page
             $('form#settings').submit(function(event) {
                 var name = $('#settings_name').val();
-                network_player.setName(name);
+                this_player.setName(name);
                 return false;
             });
             $('form#join').submit(function(event) {
