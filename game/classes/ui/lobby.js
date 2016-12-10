@@ -21,17 +21,17 @@ Lobby.prototype.preload = function() {
 Lobby.prototype.create = function () {
     game.add.sprite(0, 0, 'menu');
 
-    populateUI();
+    this.populateUI();
 
     this.add.button(22, game.height - 92, 'back_button', this.back, this);
     this.add.button(game.width - 480, game.height - 92, 'ready_button', this.gameStart, this);
 };
 
-function populateUI() {
+Lobby.prototype.populateUI = function () {
     showPlayer1("");
     showPlayer2("");
     var i = 1;
-    $.each(lobby_players, function(player_id, player) {
+    $.each(game.session.players, function(player_id, player) {
         if (i == 1) {
             showPlayer1(player.name);
             console.log("showPlayer1 "+player.name);
@@ -43,7 +43,7 @@ function populateUI() {
         }
         i++;
     });
-}
+};
 
 var player1Text;
 function showPlayer1 (name) {

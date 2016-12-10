@@ -37,25 +37,25 @@ function Menu(){
 
 Menu.prototype.newGame = function () {
     var self = this;
-    game.network.createNewGame(game.thisPlayer, function () {
+    game.network.createNewGame(game.thisPlayer, function (error) {
         if (game.session !== null) {
-            console.log("NewGame created with success! begin lobby");
+            alert("Session code: '" + game.session.code + "'. Send it to your friend to join your session!");
             self.state.start('Lobby');
         } else {
-            alert("Unable to create new game. Try again later");
+            alert(error || "Unable to create new game. Try again later");
         }
     });
 };
 
 Menu.prototype.joinGame = function () {
     var self = this;
-    var gameSessionCode = "00001";
-    game.network.joinGame(gameSessionCode, game.thisPlayer, function () {
+    var gameSessionCode = prompt("Type the session code") || "00001";
+    game.network.joinGame(gameSessionCode, game.thisPlayer, function (error) {
         if (game.session !== null) {
             console.log("NewGame created with success! begin lobby");
             self.state.start('Lobby');
         } else {
-            alert("There is no session '" + gameSessionCode + "'. Create a new game or try again.");
+            alert(error || "Unable to join game '" + gameSessionCode + "'. Try again later");
         }
     });
 };

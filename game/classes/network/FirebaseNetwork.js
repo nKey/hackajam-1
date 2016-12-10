@@ -29,7 +29,7 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
             } else {
                 game.session = null;
                 remainingRetries = tryAgainMax;
-                callback();
+                callback("Unable to create new game. Try again later");
             }
         } else {
             game.session.save(function () {
@@ -43,15 +43,21 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
 FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
     firebase.database().ref('games/' + gameCode).once('value', function(snapshot) {
         game.session = new GameSession(snapshot.val());
+        game.session.players = snapshot.child("players").val();
         if (game.session !== null) {
-            game.session.players.push(player);
-            game.session.save(function () {
-                console.log("joined GameSession: "+JSON.stringify(game.session));
-                callback();
-            });
+            console.log("Found GameSession: \n"+JSON.stringify(game.session));
+            if (game.session.players.length >= 2) {
+                game.session = null;
+                callback("Maximum number of users (2) is reached in this session. Create a new game.");
+            } else {
+                game.session.players.push(player);
+                game.session.save(function () {
+                    console.log("joined GameSession: \n" + JSON.stringify(game.session));
+                    callback();
+                });
+            }
         } else {
-            console.log("Couldn't find GameSession "+gameCode);
-            callback();
+            callback("Couldn't find GameSession "+gameCode);
         }
     });
 };
@@ -67,8 +73,8 @@ function GameSession() {
 }
 
 GameSession.prototype.generateGameCode = function() {
-    // var number = parseInt(Math.random() * 99999);
-    var str = "" + 1;//number;
+    var number = parseInt(Math.random() * 99999);
+    var str = "" + number;
     var pad = "00000";
     return pad.substring(0, pad.length - str.length) + str;
 };
