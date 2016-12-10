@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>AINOTA TANKS</title>
+    <script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
+
+<!-- Frameworks -->
+    <script type="text/javascript" src="game/lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="game/lib/socket.io-1.4.5.js"></script>
+    <script type="text/javascript" src="game/lib/phaser.js"></script>
+    <script type="text/javascript" src="game/lib/CanvasInput.min.js"></script>
+
+<!-- Application -->
+    <script type="text/javascript" src="game/classes/network/FirebaseNetwork.js"></script>
+    <!-- <script type="text/javascript" src="game/network.js"></script> -->
+
+<!-- Screens -->
+    <script type="text/javascript" src="game/classes/ui/welcome.js"></script>
+    <script type="text/javascript" src="game/classes/ui/nickname.js"></script>
+    <script type="text/javascript" src="game/classes/ui/menu.js"></script>
+    <script type="text/javascript" src="game/classes/ui/credits.js"></script>
+    <script type="text/javascript" src="game/classes/ui/lobby.js"></script>
+    <!--<script type="text/javascript" src="game/classes/ui/game.js"></script>-->
+
+    <!--<script type="text/javascript" src="game/map.js"></script>-->
+    <!--<script type="text/javascript" src="game/tank.js"></script>-->
+    <!--<script type="text/javascript" src="game/enemy.js"></script>-->
+    <!--<script type="text/javascript" src="game/crank.js"></script>-->
+    <!--<script type="text/javascript" src="game/lever.js"></script>-->
+
+<!-- Classes-->
+    <script type="text/javascript" src="game/classes/player.js"></script>
+
+<!-- Main -->
+    <script type="text/javascript" src="game/main.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        // respond to network events
+        // game data events
+        // network_callbacks.game_will_start = function() {
+        //     console.log('Waiting to sync players');
+        //     playerNumber = network_player.number;
+        //     console.log("You ("+network_player.name+") are player "+playerNumber);
+        // };
+        // network_callbacks.game_did_start = function() {
+        //     console.log('Game loaded and players synced');
+        // };
+        // network_callbacks.game_move_event = function(movement, rotation) {
+        //     moveTank(movement, rotation);
+        // };
+        // network_callbacks.game_move_turret = function(angle) {
+        //     moveTurret(angle);
+        // };
+        // network_callbacks.game_fire = function() {
+        //     turretFire();
+        // };
+        $(document).ready(function(){
+            // network_register_main();
+            game_init();
+        });
+    </script>
+</head>
+<body>
+    <div id="game"></div>
+</body>
+</html>

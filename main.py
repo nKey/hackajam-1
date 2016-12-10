@@ -4,7 +4,7 @@ from flask.ext.socketio import SocketIO, emit, join_room
 
 import uuid
 
-app = Flask(__name__, static_folder='game')
+app = Flask(__name__, static_folder='game', template_folder='')
 app.config.update(
     DEBUG=True,
     SECRET_KEY='mostly-harmless!'
@@ -25,7 +25,7 @@ PLAYER = {}
 
 STATE = {
     'game_id': uuid.uuid4().hex,
-    'players': {},
+    'players': [],
     'map_id': 0,
     'event_clock': 0,
     'movement_components': [0, 0],

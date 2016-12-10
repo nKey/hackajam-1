@@ -9,15 +9,15 @@ function Welcome(){
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;    
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
-}
+};
 
 Welcome.prototype.create = function () {
-	this.add.button(0, 0, 'welcome', this.startMenu, this);
+	this.add.button(0, 0, 'welcome', this.startNickName, this);
     this.musicPlayer = game.add.audio('menuMusic', 0.2, false);
     this.musicPlayer.play('', 0, 0.2, false);
-}
+};
 
-Welcome.prototype.startMenu = function () {
-	this.state.start('Menu');
-}
+Welcome.prototype.startNickName = function () {
+	this.state.start('Nickname');
+};
 

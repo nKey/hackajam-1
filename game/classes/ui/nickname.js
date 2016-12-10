@@ -10,7 +10,7 @@ Nickname.prototype.preload = function() {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
-}
+};
 
 Nickname.prototype.create = function () {
     game.add.sprite(0, 0, 'background');
@@ -18,7 +18,7 @@ Nickname.prototype.create = function () {
     this.myInput = this.createInput(this.game.world.centerX, this.game.world.centerY + 100);
     this.myInput.anchor.set(0.5);
 
-    this.myInput.canvasInput.value(this_player.name);
+    // this.myInput.canvasInput.value(this_player.name);
 
     var buttonCache = game.cache.getImage('cancel_button');
     var button = this.add.button(game.world.centerX - buttonCache.width - 10,
@@ -27,10 +27,10 @@ Nickname.prototype.create = function () {
 
     var buttonCache = game.cache.getImage('ok_button');
     var button = this.add.button(game.world.centerX + 10,
-                                     game.world.height - 180, 'ok_button',  this.lobby, this);
+                                     game.world.height - 180, 'ok_button',  this.createPlayer, this);
 
 
-}
+};
 
 Nickname.prototype.createInput = function(x, y) {
     var bmd = this.add.bitmapData(350, 110);
@@ -55,53 +55,54 @@ Nickname.prototype.createInput = function(x, y) {
     this.myInput.events.onInputUp.add(this.inputFocus, this);
 
     return this.myInput;
-}
+};
 
 Nickname.prototype.inputFocus = function(sprite) {
     sprite.canvasInput.focus();
-}
-
-Nickname.prototype.lobby = function() {
-    if (this.myInput.canvasInput._value == "") {
-        this_player.setName("untitled");
-    } else {
-        this_player.setName(this.myInput.canvasInput._value);
-    }
-    network_callbacks.game_room_did_join = function (game_id, players) {
-
-        console.log("game_room_did_join, players: "+JSON.stringify(players));
-        this_player.number = Object.keys(players).length;
-        console.log("player number: "+this_player.number);
-        refreshPlayerNumber(players);
-        var lobby = game.state.start('Lobby', true, false, players);
-    };
-    network_handlers.game_room_join();
 };
 
-function refreshPlayerNumber (players) {
-    if (players != undefined) {
-        var player1 = undefined;
-        $.each(players, function(player_id, player){
-            player.id = player_id;
-            if (player1 == undefined) {
-                player1 = player;
-                player1.number = 1;
-            } else {
-                if (String(player_id).localeCompare(String(player1.id))) {
-                    player1.number = 2;
-                    player1 = player;
-                    player1.number = 1;
-                } else {
-                    player.number = 2;
-                }
-            }
-        });
-        if (player1 != network_player && network_player !== undefined) {
-            network_player.number = 2;
-        }
-    }
-}
+Nickname.prototype.createPlayer = function () {
+    game.thisPlayer = new Player();
+    game.thisPlayer.name = this.myInput.canvasInput._value || "untitled";
+    this.startMenu();
+};
+
+Nickname.prototype.startMenu = function() {
+    game.state.start('Menu');
+    // network_callbacks.game_room_did_join = function (game_id, players) {
+    //     console.log("game_room_did_join, players: "+JSON.stringify(players));
+    //     // this_player.number = Object.keys(players).length;
+    //     console.log("player number: "+this_player.number);
+    //     refreshPlayerNumber(players);
+    //     game.state.start('Lobby', true, false, players);
+    // };
+    // network_handlers.game_room_join();
+};
+
+// function refreshPlayerNumber (players) {
+//     if (players != undefined) {
+//         var player1 = undefined;
+//         $.each(players, function(player_id, player){
+//             player.id = player_id;
+//             if (player1 == undefined) {
+//                 player1 = player;
+//                 player1.number = 1;
+//             } else {
+//                 if (String(player_id).localeCompare(String(player1.id))) {
+//                     player1.number = 2;
+//                     player1 = player;
+//                     player1.number = 1;
+//                 } else {
+//                     player.number = 2;
+//                 }
+//             }
+//         });
+//         if (player1 != network_player && network_player !== undefined) {
+//             network_player.number = 2;
+//         }
+//     }
+// }
 
 Nickname.prototype.back = function() {
-    game.state.start('Menu');
-}
+    game.state.start('Welcome');
+};
