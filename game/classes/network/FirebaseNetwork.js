@@ -39,6 +39,7 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
             }
         } else {
             game.session.save(function () {
+                player.number = 1;
                 game.session.registerSessionPlayerUpdatesListener();
                 console.log("created new GameSession: "+JSON.stringify(game.session));
                 callback();
@@ -60,6 +61,7 @@ FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
                 callback("Maximum number of users (2) is reached in this session. Create a new game.");
             } else {
                 game.session.players.push(player);
+                player.number = game.session.players.length;
                 console.log("Found GameSession 3: \n"+JSON.stringify(game.session));
                 game.session.save(function () {
                     game.session.registerSessionPlayerUpdatesListener();
