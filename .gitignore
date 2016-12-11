@@ -3,9 +3,9 @@
 # virtualenv
 .Python
 bin/
-include/
-lib/
-local/
+/include/
+/lib/
+/local/
 
 pip-selfcheck.json
 
