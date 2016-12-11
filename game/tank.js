@@ -167,7 +167,7 @@ Tank.prototype.fireCallback = function () {
     for (var i = 0; i < 5; i++) {
         this.bulletsIndicator[i].visible = (i < this.numberOfBullets);
     }
-    
+
     this.hideSmileAndShowSmileChanged();
     setTimeout(this.hideSmileChangedAndShowSmile, 1000, this.smile, this.smileChanged);
 }
@@ -188,7 +188,7 @@ Tank.prototype.hideSmileChangedAndShowSmile = function(smile, smileChanged) {
     smileChanged.visible = false;
 }
 Tank.prototype.broadcastPosition = function(){
-    network_handlers.dead_reckoning(this.tank.x, this.tank.y, this.tank.angle);
+    game.network.dead_reckoning(this.tank.x, this.tank.y, this.tank.angle);
 }
 
 Tank.prototype.updatePosition = function(x, y, angle){

@@ -5,8 +5,8 @@ function Map(game){
 }
 
 Map.prototype.preload = function() {
-    this.game.load.tilemap('map1', 'game/tilemap/map1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('gameTiles', 'game/tilemap/tiles.png');
+    this.game.load.tilemap('map1', 'game/maps/tilemap/map1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('gameTiles', 'game/maps/tilemap/tiles.png');
 }
 
 Map.prototype.create = function() {
@@ -26,7 +26,7 @@ Map.prototype.setupTilemap = function() {
 
     this.backgroundlayer = this.map.createLayer('backgroundLayer');
     this.blockedLayer = this.map.createLayer('blockedLayer');
-    
+
     this.map.setCollisionBetween(1, 1000, true, 'blockedLayer');
 
     this.backgroundlayer.resizeWorld();

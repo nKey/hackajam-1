@@ -48,11 +48,11 @@ Lever.prototype.update = function() {
             normalizedLeverValue = (this.leverTrigger.y - this.leverArea.y) / (this.leverArea.height - this.leverTrigger.height);
             this.leverSprite.animations.frame = Math.ceil(normalizedLeverValue * this.leverSprite.animations.frameTotal) - 1;
             if(this.direction == 'left'){
-                network_handlers.control_lever_left(this.leverSprite.animations.frame - 2);
+                game.network.control_lever_left(this.leverSprite.animations.frame - 2);
             }else if(this.direction == 'right'){
-                network_handlers.control_lever_right(this.leverSprite.animations.frame - 2);
+                game.network.control_lever_right(this.leverSprite.animations.frame - 2);
             }
-            
+
         }
     }
 }

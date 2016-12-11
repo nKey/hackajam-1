@@ -14,7 +14,8 @@ function game_init() {
 	game.state.add('Menu', Menu);
     game.state.add('Credits', Credits);
 	game.state.add('Lobby', Lobby);
-	// game.state.add('Game', Game);
+	game.state.add('Game', Game);
+    
 	game.state.start('Welcome');
 }
 

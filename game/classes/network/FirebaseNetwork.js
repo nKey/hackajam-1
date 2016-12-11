@@ -1,5 +1,6 @@
 var Network = {
-    sessionPlayersUpdated: function(players) {}
+    //actions received
+    sessionPlayersUpdated: function(players) {},
 };
 
 
@@ -71,6 +72,22 @@ FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
             callback("Couldn't find GameSession '" + gameCode + "'");
         }
     });
+};
+
+FirebaseNetwork.prototype.action_fire = function() {
+    console.log("//TODO action_fire");
+};
+
+FirebaseNetwork.prototype.control_lever_left = function(value) {
+    console.log("//TODO control_lever_left");
+};
+
+FirebaseNetwork.prototype.control_lever_right = function(value) {
+    console.log("//TODO control_lever_right");
+};
+
+FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
+    console.log("//TODO dead_reckoning");
 };
 
 function gameSessionFromData(data) {
