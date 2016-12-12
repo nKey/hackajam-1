@@ -28,10 +28,8 @@ Lobby.prototype.populateUI = function () {
     $.each(game.session.players, function(player_id, player) {
         if (i == 1) {
             showPlayer1(player.name);
-            console.log("showPlayer1 "+JSON.stringify(player));
         } else if (i == 2) {
             showPlayer2(player.name);
-            console.log("showPlayer2 "+JSON.stringify(player));
         } else {
             console.log("Error: should not have more than 2 players: " + JSON.stringify(game.session.players));
         }
