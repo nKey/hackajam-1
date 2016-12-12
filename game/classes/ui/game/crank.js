@@ -51,8 +51,7 @@ Crank.prototype.update = function() {
             this.buttonCircle.y = this.outCircle.y + (this.outCircle.radius - this.buttonCircle.radius) * Math.sin(angleRadius);
             this.crank.angle = angleRadius * (180 / Math.PI);
             this.angle = angleRadius;
-            //TODO
-            // network_handlers.control_turret(angleRadius);
+            game.network.move_turret(angleRadius);
             if (angleRadius > 1.2 && angleRadius < 1.4 && this.game.time.now > this.nextCrankSound) {
                 this.nextCrankSound = this.game.time.now + this.crankSoundDelay;
                 sound = game.add.audio('crankSound');

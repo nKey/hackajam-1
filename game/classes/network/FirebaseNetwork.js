@@ -1,7 +1,8 @@
 var Network = {
     //actions received
     sessionPlayersUpdated: function(players) {},
-    turretFired: function()  {}
+    turretMoved: function (angle) {},
+    turretFired: function() {}
 };
 
 
@@ -77,9 +78,14 @@ FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
     });
 };
 
+FirebaseNetwork.prototype.move_turret = function(angle) {
+    game.session.state.turret_angle = angle;
+    firebase.database().ref('games/' + game.session.code + "/state/turret_angle").set(angle);
+};
+
 FirebaseNetwork.prototype.action_fire = function() {
     game.session.state.last_shot = new Date().toISOString();
-    game.session.save();
+    firebase.database().ref('games/' + game.session.code + "/state/last_shot").set(game.session.state.last_shot);
 };
 
 FirebaseNetwork.prototype.control_lever_left = function(value) {
@@ -148,6 +154,9 @@ GameSession.prototype.save = function (callback) {
 GameSession.prototype.registerSessionPlayerUpdatesListener = function () {
     firebase.database().ref('games/' + this.code + '/players').on('value', function (playersObj) {
         Network.sessionPlayersUpdated(playersObj.val());
+    });
+    firebase.database().ref('games/' + this.code + '/state/turret_angle').on('value', function (turretAngle) {
+        Network.turretMoved(turretAngle.val());
     });
     firebase.database().ref('games/' + this.code + '/state/last_shot').on('value', function (lastShot) {
         //last_shot changed, this indicates a new shot

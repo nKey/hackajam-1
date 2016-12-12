@@ -53,7 +53,11 @@ Game.prototype.preload = function() {
     //this keeps js running even if in background or user removed focus from browser
     game.stage.disableVisibilityChange = true;
 
+    var self = this;
     var tank = this.tank;
+    Network.turretMoved = function(angle) {
+        self.moveTurret(angle);
+    }
     Network.turretFired = function() {
         tank.fire();
     }
