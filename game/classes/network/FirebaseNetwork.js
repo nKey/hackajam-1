@@ -21,7 +21,12 @@ FirebaseNetwork.prototype.init = function() {
 
 var tryAgainMax = 3;
 var remainingRetries = tryAgainMax;
+var isLoading = false;
 FirebaseNetwork.prototype.createNewGame = function (player, callback) {
+    if (isLoading) {
+        return;
+    }
+    isLoading = true;
     var self = this;
     game.session = new GameSession();
     game.session.players = [player];
@@ -35,6 +40,7 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
             } else {
                 game.session = null;
                 remainingRetries = tryAgainMax;
+                isLoading = false;
                 callback("Unable to create new game. Try again later");
             }
         } else {
@@ -42,6 +48,7 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
                 player.number = 1;
                 game.session.registerSessionPlayerUpdatesListener();
                 console.log("created new GameSession: "+JSON.stringify(game.session));
+                isLoading = false;
                 callback();
             });
         }
