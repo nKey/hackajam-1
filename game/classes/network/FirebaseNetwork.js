@@ -1,6 +1,7 @@
 var Network = {
     //actions received
     sessionPlayersUpdated: function(players) {},
+    turretFired: function()  {}
 };
 
 
@@ -84,7 +85,8 @@ FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
 };
 
 FirebaseNetwork.prototype.action_fire = function() {
-    console.log("//TODO action_fire");
+    game.session.last_shot = new Date().toISOString();
+    game.session.save();
 };
 
 FirebaseNetwork.prototype.control_lever_left = function(value) {
@@ -133,5 +135,9 @@ GameSession.prototype.save = function (callback) {
 GameSession.prototype.registerSessionPlayerUpdatesListener = function () {
     firebase.database().ref('games/' + this.code + '/players').on('value', function (playersObj) {
         Network.sessionPlayersUpdated(playersObj.val());
+    });
+    firebase.database().ref('games/' + this.code + '/last_shot').on('value', function (lastShot) {
+        //last_shot changed, this indicates a new shot
+        Network.turretFired(lastShot.val());
     });
 };

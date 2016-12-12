@@ -49,6 +49,14 @@ Game.prototype.preload = function() {
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.updateLayout();
+
+    //this keeps js running even if in background or user removed focus from browser
+    game.stage.disableVisibilityChange = true;
+
+    var tank = this.tank;
+    Network.turretFired = function() {
+        tank.fire();
+    }
 }
 
 Game.prototype.create = function() {
@@ -146,10 +154,6 @@ Game.prototype.moveTank = function(movement, rotation) {
 
 Game.prototype.moveTurret = function(angle) {
     this.tank.turretAngle = angle;
-}
-
-Game.prototype.turretFire = function() {
-    this.tank.fire();
 }
 
 Game.prototype.missionCompleted = function() {
