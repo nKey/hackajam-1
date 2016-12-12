@@ -2,7 +2,8 @@ var Network = {
     //actions received
     sessionPlayersUpdated: function(players) {},
     turretMoved: function (angle) {},
-    turretFired: function() {}
+    turretFired: function() {},
+    tankMoved: function(movement, rotation) {}
 };
 
 
@@ -90,13 +91,15 @@ FirebaseNetwork.prototype.action_fire = function() {
 };
 
 FirebaseNetwork.prototype.control_lever_left = function(value) {
-    game.session.state.movement_components[0] = value;
-    firebase.database().ref('games/' + this.code + "/state/movement_components/0/").set(value);
+    game.session.state.movement.lever[0] = value;
+    this.calculateMovementUpdate();
+    firebase.database().ref('games/' + game.session.code + "/state/movement").set(game.session.state.movement);
 };
 
 FirebaseNetwork.prototype.control_lever_right = function(value) {
-    game.session.state.movement_components[1] = value;
-    firebase.database().ref('games/' + this.code + "/state/movement_components/1/").set(value);
+    game.session.state.movement.lever[1] = value
+    this.calculateMovementUpdate();
+    firebase.database().ref('games/' + game.session.code + "/state/movement").set(game.session.state.movement);
 };
 
 FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
@@ -107,12 +110,22 @@ FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
     // });
 };
 
+FirebaseNetwork.prototype.calculateMovementUpdate = function() {
+    var movement = game.session.state.movement;
+    var left = movement.lever[0];
+    var right = movement.lever[1];
+    movement.velocity = (left / 2.0) + (right / 2.0);
+    movement.rotation = (right / 2.0) - (left / 2.0);
+}
+
 function gameSessionFromData(data) {
     var session = new GameSession();
     session.code = data["code"];
     session.players = data["players"];
     session.dateCreated = data["dateCreated"];
-    session.state = data["state"];
+    if (data["state"] != undefined) {
+        session.state = data["state"];
+    }
     return session;
 }
 
@@ -127,7 +140,11 @@ function GameSession() {
         this.dateCreated = new Date().toISOString();
     }
     if (!this.state) {
-        this.state = {};
+        this.state = {
+            movement:{
+                lever: [0, 0]
+            }
+        };
     }
 }
 
@@ -148,5 +165,11 @@ GameSession.prototype.registerSessionPlayerUpdatesListener = function () {
     firebase.database().ref('games/' + this.code + '/state/last_shot').on('value', function (lastShot) {
         //last_shot changed, this indicates a new shot
         Network.turretFired(lastShot.val());
+    });
+    firebase.database().ref('games/' + this.code + '/state/movement').on('value', function (movementObj) {
+        var movement = movementObj.val();
+        if (movement && movement.velocity && movement.rotation)  {
+            Network.tankMoved(movement.velocity, movement.rotation);
+        }
     });
 };

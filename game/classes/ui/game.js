@@ -61,6 +61,9 @@ Game.prototype.preload = function() {
     Network.turretFired = function() {
         tank.fire();
     }
+    Network.tankMoved = function(velocity, rotation) {
+        self.moveTank(velocity, rotation);
+    }
 }
 
 Game.prototype.create = function() {

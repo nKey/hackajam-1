@@ -18,7 +18,3 @@ function game_init() {
 
 	game.state.start('Welcome');
 }
-
-function moveTank(movement, rotation){
-    game.state.states[game.state.current].moveTank(movement, rotation);
-}
