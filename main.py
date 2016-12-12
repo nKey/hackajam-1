@@ -184,10 +184,10 @@ def event_notify_position(data):
 def event_notify_movement():
     game_id = STATE['game_id']
     left, right = STATE['movement_components']
-    x = (left / 2.0) + (right / 2.0)
-    r = (right / 2.0) - (left / 2.0)
+    movement = (left / 2.0) + (right / 2.0)
+    rotation = (right / 2.0) - (left / 2.0)
     STATE['event_clock'] += 1
-    emit('event_movement', {'x': x, 'r': r, 'clock': STATE['event_clock']},
+    emit('event_movement', {'x': movement, 'r': rotation, 'clock': STATE['event_clock']},
         room=game_id, broadcast=True)
 
 

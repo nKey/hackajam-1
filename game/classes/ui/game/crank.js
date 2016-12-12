@@ -51,7 +51,8 @@ Crank.prototype.update = function() {
             this.buttonCircle.y = this.outCircle.y + (this.outCircle.radius - this.buttonCircle.radius) * Math.sin(angleRadius);
             this.crank.angle = angleRadius * (180 / Math.PI);
             this.angle = angleRadius;
-            network_handlers.control_turret(angleRadius);
+            //TODO
+            // network_handlers.control_turret(angleRadius);
             if (angleRadius > 1.2 && angleRadius < 1.4 && this.game.time.now > this.nextCrankSound) {
                 this.nextCrankSound = this.game.time.now + this.crankSoundDelay;
                 sound = game.add.audio('crankSound');
@@ -66,7 +67,7 @@ Crank.prototype.render = function() {
         this.game.debug.geom(this.outCircle);
         this.game.debug.geom(this.inCircle, "#FFFFFF");
         this.game.debug.geom(this.buttonCircle, '#000000');
-    } 
+    }
 }
 
 Crank.prototype.getAngle = function() {

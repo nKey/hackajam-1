@@ -59,26 +59,19 @@ FirebaseNetwork.prototype.createNewGame = function (player, callback) {
 FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
     firebase.database().ref('games/' + gameCode).once('value', function(snapshot) {
         if (snapshot.val() !== null) {
-            console.log("Found GameSession 1: \n"+JSON.stringify(snapshot.val()));
             game.session = gameSessionFromData(snapshot.val());
-            // game.session.players = snapshot.child("players").val();
-            console.log("Found GameSession 2: \n"+JSON.stringify(game.session));
             if (game.session.players.length >= 2) {
                 game.session = null;
-                console.log("Maximum number of users (2) is reached in this session. Create a new game.");
                 callback("Maximum number of users (2) is reached in this session. Create a new game.");
             } else {
                 game.session.players.push(player);
                 player.number = game.session.players.length;
-                console.log("Found GameSession 3: \n"+JSON.stringify(game.session));
                 game.session.save(function () {
                     game.session.registerSessionPlayerUpdatesListener();
-                    console.log("joined GameSession 4: \n" + JSON.stringify(game.session));
                     callback();
                 });
             }
         } else {
-            console.log("Couldn't find GameSession '" + gameCode + "'");
             callback("Couldn't find GameSession '" + gameCode + "'");
         }
     });
@@ -90,15 +83,28 @@ FirebaseNetwork.prototype.action_fire = function() {
 };
 
 FirebaseNetwork.prototype.control_lever_left = function(value) {
-    console.log("//TODO control_lever_left");
+    console.log("WILL SAVE control_lever_left "+value);
+    game.session.movement_components[0] = value;
+    game.session.save(function() {
+        console.log("SAVED control_lever_left "+value);
+    });
 };
 
 FirebaseNetwork.prototype.control_lever_right = function(value) {
     console.log("//TODO control_lever_right");
+    console.log("WILL SAVE control_lever_right "+value);
+    game.session.movement_components[1] = value;
+    game.session.save(function() {
+        console.log("SAVED control_lever_right "+value);
+    });
 };
 
 FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
-    console.log("//TODO dead_reckoning");
+    // console.log("//TODO dead_reckoning x: "+x+", y: "+y+", angle: "+angle);
+    // game.session.state = value;
+    // game.session.save(function() {
+    //
+    // });
 };
 
 function gameSessionFromData(data) {
@@ -106,6 +112,7 @@ function gameSessionFromData(data) {
     session.code = data["code"];
     session.players = data["players"];
     session.dateCreated = data["dateCreated"];
+    session.movement_components = [0, 0];
     return session;
 }
 
