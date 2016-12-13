@@ -61,9 +61,12 @@ Game.prototype.preload = function() {
     Network.turretFired = function() {
         tank.fire();
     }
-    Network.tankMoved = function(velocity, rotation) {
-        self.moveTank(velocity, rotation);
+    Network.tankControlsChanged = function(movement, rotation) {
+        self.moveTank(movement, rotation);
     }
+    Network.tankPositionChanged = function(x, y, angle) {
+        self.tank.updatePosition(x, y, angle);
+    };
 }
 
 Game.prototype.create = function() {
@@ -155,6 +158,9 @@ Game.prototype.render = function() {
 Game.prototype.moveTank = function(movement, rotation) {
     this.tank.currentSpeed = movement * 50;
     this.tank.tankAngle = rotation/3;
+    if (isNaN(this.tank.tankAngle)) {
+        this.tank.tankAngle = 0;
+    }
 }
 
 Game.prototype.moveTurret = function(angle) {

@@ -3,7 +3,8 @@ var Network = {
     sessionPlayersUpdated: function(players) {},
     turretMoved: function (angle) {},
     turretFired: function() {},
-    tankMoved: function(movement, rotation) {}
+    tankControlsChanged: function(movement, rotation) {},
+    tankPositionChanged: function(x, y, angle) {}
 };
 
 
@@ -82,40 +83,44 @@ FirebaseNetwork.prototype.joinGame = function (gameCode, player, callback) {
 };
 
 FirebaseNetwork.prototype.move_turret = function(angle) {
-    game.session.state.turret_angle = angle;
-    firebase.database().ref('games/' + game.session.code + "/state/turret_angle").set(angle);
+    game.session.state.controls.turret_angle = angle;
+    firebase.database().ref('games/' + game.session.code + "/state/controls/turret_angle").set(angle);
 };
 
 FirebaseNetwork.prototype.action_fire = function() {
-    firebase.database().ref('games/' + game.session.code + "/state/last_shot").set(new Date().toISOString());
+    game.session.state.controls.last_shot = new Date().toISOString();
+    this.updateStateControls();
 };
 
 FirebaseNetwork.prototype.control_lever_left = function(value) {
-    game.session.state.movement.lever[0] = value;
-    this.calculateMovementUpdate();
-    firebase.database().ref('games/' + game.session.code + "/state/movement").set(game.session.state.movement);
+    game.session.state.controls.lever[0] = value;
+    this.updateStateControls();
 };
 
 FirebaseNetwork.prototype.control_lever_right = function(value) {
-    game.session.state.movement.lever[1] = value
-    this.calculateMovementUpdate();
+    game.session.state.controls.lever[1] = value
+    this.updateStateControls();
+};
+
+FirebaseNetwork.prototype.updateStateControls = function() {
+    this.calculateStateUpdate();
+    firebase.database().ref('games/' + game.session.code + "/state/controls").set(game.session.state.controls);
+}
+
+FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
+    game.session.state.movement.x = x;
+    game.session.state.movement.y = y;
+    game.session.state.movement.angle = angle;
+    this.calculateStateUpdate();
     firebase.database().ref('games/' + game.session.code + "/state/movement").set(game.session.state.movement);
 };
 
-FirebaseNetwork.prototype.dead_reckoning = function(x, y, angle) {
-    // console.log("//TODO dead_reckoning x: "+x+", y: "+y+", angle: "+angle);
-    // game.session.state = value;
-    // game.session.save(function() {
-    //
-    // });
-};
-
-FirebaseNetwork.prototype.calculateMovementUpdate = function() {
-    var movement = game.session.state.movement;
-    var left = movement.lever[0];
-    var right = movement.lever[1];
-    movement.velocity = (left / 2.0) + (right / 2.0);
-    movement.rotation = (right / 2.0) - (left / 2.0);
+FirebaseNetwork.prototype.calculateStateUpdate = function() {
+    var controls = game.session.state.controls;
+    var left = controls.lever[0];
+    var right = controls.lever[1];
+    game.session.state.controls.velocity = (left / 2.0) + (right / 2.0);
+    game.session.state.controls.rotation = (right / 2.0) - (left / 2.0);
 }
 
 function gameSessionFromData(data) {
@@ -141,8 +146,17 @@ function GameSession() {
     }
     if (!this.state) {
         this.state = {
-            movement:{
-                lever: [0, 0]
+            controls: {
+                lever:[0, 0]
+                // turret_angle: 0,
+                // last_shot: 0,
+                // rotation: 0,
+                // velocity: 0,
+            },
+            movement: {
+                // x: 0,
+                // y: 0,
+                // angle: 0
             }
         };
     }
@@ -159,17 +173,21 @@ GameSession.prototype.registerSessionPlayerUpdatesListener = function () {
     firebase.database().ref('games/' + this.code + '/players').on('value', function (playersObj) {
         Network.sessionPlayersUpdated(playersObj.val());
     });
-    firebase.database().ref('games/' + this.code + '/state/turret_angle').on('value', function (turretAngle) {
-        Network.turretMoved(turretAngle.val());
-    });
-    firebase.database().ref('games/' + this.code + '/state/last_shot').on('value', function (lastShot) {
+    firebase.database().ref('games/' + this.code + '/state/controls/last_shot').on('value', function (lastShotObj) {
         //last_shot changed, this indicates a new shot
-        Network.turretFired(lastShot.val());
+        Network.turretFired(lastShotObj.val());
+    });
+    firebase.database().ref('games/' + this.code + '/state/controls').on('value', function (controlsObj) {
+        var controls =controlsObj.val();
+        game.session.state.controls = controls
+        Network.tankControlsChanged(controls.velocity, controls.rotation);
+        Network.turretMoved(controls.turret_angle);
     });
     firebase.database().ref('games/' + this.code + '/state/movement').on('value', function (movementObj) {
         var movement = movementObj.val();
-        if (movement && movement.velocity && movement.rotation)  {
-            Network.tankMoved(movement.velocity, movement.rotation);
+        if (movement != undefined) {
+            game.session.state.movement = movement;
+            Network.tankPositionChanged(movement.x, movement.y, movement.angle);
         }
     });
 };

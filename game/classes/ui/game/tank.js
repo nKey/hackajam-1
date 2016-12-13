@@ -90,6 +90,9 @@ Tank.prototype.setupTank = function() {
     //should change game.camera view, but i've facing a issue that camera does not follow tank anymore
     this.tank.x = 600;
     this.tank.y = 300;
+    this.angle = 0;
+    this.tankAngle = 0;
+    this.turretAngle = 0;
 
     this.game.camera.follow(this.tank);
     this.game.camera.focusOnXY(600,300);
@@ -111,9 +114,6 @@ Tank.prototype.update = function () {
     this.turret.x = this.tank.x;
     this.turret.y = this.tank.y;
 
-    if (this.turretAngle == undefined) {
-        this.turretAngle = 0;
-    }
     this.turret.rotation = this.tank.rotation + this.turretAngle;
 
     if (DEBUG) {
@@ -187,7 +187,8 @@ Tank.prototype.hideSmileChangedAndShowSmile = function(smile, smileChanged) {
     smile.visible = true;
     smileChanged.visible = false;
 }
-Tank.prototype.broadcastPosition = function(){
+
+Tank.prototype.broadcastPosition = function() {
     game.network.dead_reckoning(this.tank.x, this.tank.y, this.tank.angle);
 }
 
