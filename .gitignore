@@ -3,6 +3,8 @@
 # virtualenv
 .Python
 bin/
+/env/
+/flask/
 /include/
 /lib/
 /local/
